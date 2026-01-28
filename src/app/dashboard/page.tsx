@@ -8,6 +8,7 @@ import {
   CircleDollarSign,
   CreditCard,
   XCircle,
+  AlertCircle,
 } from 'lucide-react'
 import { format } from 'date-fns'
 
@@ -164,8 +165,31 @@ export default function DashboardPage() {
             </Table>
           </CardContent>
         </Card>
-         <div className="lg:col-span-3">
+         <div className="lg:col-span-3 flex flex-col gap-4">
           <TransactionChart stats={stats} />
+          {stats.topFailureReasons.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <AlertCircle className="h-5 w-5 text-destructive" />
+                  Top Failure Reasons
+                </CardTitle>
+                <CardDescription>
+                  Most common errors in your test transactions.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-4">
+                  {stats.topFailureReasons.map(({ reason, count }) => (
+                    <li key={reason} className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">{reason}</span>
+                      <span className="font-semibold">{count} {count > 1 ? 'times' : 'time'}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </>

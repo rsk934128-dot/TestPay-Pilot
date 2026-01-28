@@ -91,5 +91,19 @@ export function getTransactionStats() {
     const total = transactions.length;
     const success = transactions.filter(tx => tx.status === 'Success').length;
     const failed = total - success;
-    return { total, success, failed };
+    
+    const failureReasons = transactions
+      .filter(tx => tx.status === 'Failed')
+      .reduce((acc, tx) => {
+        const reason = `${tx.responseCode} - ${tx.gatewayMessage}`;
+        acc[reason] = (acc[reason] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+
+    const topFailureReasons = Object.entries(failureReasons)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 3)
+      .map(([reason, count]) => ({ reason, count }));
+
+    return { total, success, failed, topFailureReasons };
 }
