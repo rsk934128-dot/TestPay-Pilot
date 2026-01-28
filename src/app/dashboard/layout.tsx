@@ -19,6 +19,7 @@ import {
   Loader2,
   Menu,
   Info,
+  GitCompareArrows,
 } from 'lucide-react'
 import { useEffect } from 'react'
 
@@ -45,6 +46,7 @@ const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'ড্যাশবোর্ড' },
   { href: '/dashboard/payment', icon: CreditCard, label: 'নতুন পেমেন্ট' },
   { href: '/dashboard/history', icon: History, label: 'ইতিহাস' },
+  { href: '/dashboard/reconciliation', icon: GitCompareArrows, label: 'দৈনিক পুনর্মিলন' },
   { href: '/dashboard/readiness', icon: ShieldCheck, label: 'সিস্টেম প্রস্তুতি' },
   { href: '/dashboard/checklist', icon: ClipboardCheck, label: 'প্রোমোশন চেকলিস্ট' },
   { href: '/dashboard/pitch', icon: Mic, label: 'পিচ গাইড' },
