@@ -20,6 +20,7 @@ import {
   Menu,
   Info,
   GitCompareArrows,
+  ShieldAlert,
 } from 'lucide-react'
 import { useEffect } from 'react'
 
@@ -48,6 +49,7 @@ const navItems = [
   { href: '/dashboard/history', icon: History, label: 'ইতিহাস' },
   { href: '/dashboard/reconciliation', icon: GitCompareArrows, label: 'দৈনিক পুনর্মিলন' },
   { href: '/dashboard/readiness', icon: ShieldCheck, label: 'সিস্টেম প্রস্তুতি' },
+  { href: '/dashboard/security', icon: ShieldAlert, label: 'পূর্ণাঙ্গ নিরাপত্তা (2FA)' },
   { href: '/dashboard/checklist', icon: ClipboardCheck, label: 'প্রোমোশন চেকলিস্ট' },
   { href: '/dashboard/pitch', icon: Mic, label: 'পিচ গাইড' },
   { href: '/dashboard/deck', icon: Projector, label: 'এক্সিকিউটিভ ডেক' },
