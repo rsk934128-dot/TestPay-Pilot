@@ -12,6 +12,7 @@ import {
   Settings,
   AlertTriangle,
   Trash2,
+  ShieldCheck,
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
@@ -34,6 +35,7 @@ const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/dashboard/payment', icon: CreditCard, label: 'New Payment' },
   { href: '/dashboard/history', icon: History, label: 'History' },
+  { href: '/dashboard/readiness', icon: ShieldCheck, label: 'Launch Readiness' },
 ]
 
 export default function DashboardLayout({
@@ -144,7 +146,7 @@ export default function DashboardLayout({
           {children}
         </main>
         <footer className="p-6 pt-0 text-center text-sm text-muted-foreground">
-          <p>This is a pilot testing environment.</p>
+          <p>Sandbox testing only. No real card data processed.</p>
         </footer>
       </div>
     </div>

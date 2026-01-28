@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Loader2, Sparkles, ThumbsUp, ThumbsDown, Info } from 'lucide-react'
+import { Loader2, Sparkles, ThumbsUp, ThumbsDown, Info, Lock, CheckCircle } from 'lucide-react'
 import { format } from 'date-fns'
 
 import { getInterpretation } from '@/lib/actions'
@@ -63,6 +63,8 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
   const [isLoading, setIsLoading] = useState(false)
   const [interpretationMeta, setInterpretationMeta] = useState<{ version: number, timestamp: Date | null }>({ version: 1, timestamp: null });
   const [feedback, setFeedback] = useState<'helpful' | 'unhelpful' | null>(null);
+  const [isLocked, setIsLocked] = useState(false);
+  const [reviewedBy, setReviewedBy] = useState<string | null>(null);
 
   const handleInterpret = async () => {
     setIsLoading(true)
@@ -73,7 +75,7 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
     )
     if (result) {
         setInterpretation(result);
-        setInterpretationMeta(prev => ({ version: prev.version, timestamp: new Date() }));
+        setInterpretationMeta(prev => ({ version: isLocked ? prev.version : prev.version + 1, timestamp: new Date() }));
     } else {
         setInterpretation({
             interpretation: "Could not get an interpretation at this time. The AI model may be offline or an error occurred.",
@@ -85,15 +87,17 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
   }
 
   const handleFeedback = (newFeedback: 'helpful' | 'unhelpful') => {
-      // In a real app, this would be sent to a logging service.
-      // For this pilot, we just update the UI state to show interaction.
       if (feedback === newFeedback) {
-          setFeedback(null); // Allow deselecting
+          setFeedback(null);
       } else {
           setFeedback(newFeedback);
       }
   };
 
+  const handleLockExplanation = () => {
+      setIsLocked(true);
+      setReviewedBy("Admin");
+  };
 
   const confidenceColor = {
     High: 'border-green-500 text-green-600',
@@ -117,7 +121,7 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
             </p>
             <Button
               onClick={handleInterpret}
-              disabled={isLoading}
+              disabled={isLoading || isLocked}
               variant="outline"
             >
               {isLoading ? (
@@ -125,9 +129,7 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Interpreting...
                 </>
-              ) : (
-                'Interpret Response'
-              )}
+              ) : isLocked ? 'Explanation Locked' : 'Interpret Response'}
             </Button>
             {isLoading && (
               <div className="mt-4 space-y-4 rounded-lg border bg-secondary/50 p-4">
@@ -152,7 +154,12 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
                       <span className="text-xs font-semibold text-muted-foreground">AI Confidence:</span>
                       <Badge variant="outline" className={confidenceColor}>{interpretation.confidence}</Badge>
                     </div>
-                    <a href="#" onClick={(e) => e.preventDefault()} className="text-xs text-primary hover:underline">Official Docs (Placeholder)</a>
+                     {isLocked && reviewedBy && (
+                        <Badge variant="secondary" className="border-green-600 bg-green-100 text-green-800">
+                           <CheckCircle className="mr-1 h-3 w-3" />
+                           Reviewed by {reviewedBy}
+                        </Badge>
+                      )}
                   </div>
 
                   <Separator />
@@ -178,7 +185,10 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
                             <p><span className="font-semibold">Explanation Version:</span> v{interpretationMeta.version}.0</p>
                             <div className="flex items-center gap-2">
                             <span className="font-semibold">Reviewed:</span>
-                            <Badge variant="secondary">Not Yet</Badge>
+                             {isLocked ? 
+                                <Badge variant="secondary" className="bg-green-100 text-green-800">{reviewedBy}</Badge> : 
+                                <Badge variant="secondary">Not Yet</Badge>
+                             }
                             </div>
                         </AccordionContent>
                     </AccordionItem>
@@ -215,9 +225,33 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
                         </TooltipProvider>
                     </div>
                   </div>
+                
+                 <Separator />
+
+                 <div className="flex items-center justify-between pt-2">
+                    <span className="text-xs font-semibold text-muted-foreground">Admin Actions</span>
+                     <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={handleLockExplanation}
+                                  disabled={isLocked}
+                                >
+                                  <Lock className="mr-2 h-4 w-4" />
+                                  {isLocked ? "Locked" : "Lock Explanation"}
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Lock to prevent changes and mark as reviewed.</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                 </div>
                  
-                 <p className="pt-2 text-xs text-muted-foreground/80">
-                  * AI explanation is advisory, not official gateway documentation.
+                 <p className="pt-4 text-xs text-muted-foreground/80">
+                  * AI explanation is advisory. Test data auto-deleted in 14 days.
                 </p>
               </div>
             )}
