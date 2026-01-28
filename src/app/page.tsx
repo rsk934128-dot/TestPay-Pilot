@@ -16,26 +16,43 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Icons } from '@/components/icons'
 
-const rotatingTaglines = [
-  "Building trust, one transaction at a time.",
-  "From sandbox to live, with confidence.",
-  "The platform for reliable payment systems.",
-  "Data-driven decisions for your payment gateway.",
-  "Ensuring your launch is flawless."
+const featureBanners = [
+  {
+    icon: ShieldCheck,
+    title: "Risk-Controlled Testing",
+    description: "Simulate failures in a safe sandbox before they impact real users.",
+    bgColor: "bg-blue-50 dark:bg-blue-950",
+    iconColor: "text-blue-500",
+  },
+  {
+    icon: TrendingUp,
+    title: "Data-Driven Decisions",
+    description: "Replace guesswork with clear metrics and AI-powered insights.",
+    bgColor: "bg-green-50 dark:bg-green-950",
+    iconColor: "text-green-500",
+  },
+  {
+    icon: Zap,
+    title: "Accelerate Go-Live",
+    description: "Move from staging to production faster and with greater reliability.",
+    bgColor: "bg-purple-50 dark:bg-purple-950",
+    iconColor: "text-purple-500",
+  }
 ];
+
 
 export default function LandingPage() {
   const router = useRouter()
   const [countdown, setCountdown] = useState(0);
   const [isSending, setIsSending] = useState(false);
-  const [currentTaglineIndex, setCurrentTaglineIndex] = useState(0);
+  const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
   useEffect(() => {
-    const taglineTimer = setInterval(() => {
-      setCurrentTaglineIndex((prevIndex) => (prevIndex + 1) % rotatingTaglines.length);
-    }, 3000); // Change tagline every 3 seconds
+    const bannerTimer = setInterval(() => {
+      setCurrentBannerIndex((prevIndex) => (prevIndex + 1) % featureBanners.length);
+    }, 5000); // Change banner every 5 seconds
 
-    return () => clearInterval(taglineTimer);
+    return () => clearInterval(bannerTimer);
   }, []);
 
   useEffect(() => {
@@ -61,6 +78,8 @@ export default function LandingPage() {
     // For this pilot, we'll just navigate to the dashboard.
     router.push('/dashboard')
   }
+  
+  const CurrentBannerIcon = featureBanners[currentBannerIndex].icon;
 
   return (
     <main className="flex min-h-screen w-full bg-secondary/30">
@@ -78,35 +97,23 @@ export default function LandingPage() {
                     <h2 className="font-headline text-5xl font-bold tracking-tighter text-primary">
                         Launch with Confidence.
                     </h2>
-                    <div className="mt-4 h-12">
-                        <p className="text-xl text-muted-foreground transition-opacity duration-500">
-                            {rotatingTaglines[currentTaglineIndex]}
-                        </p>
+                    <p className="mt-4 text-xl text-muted-foreground">
+                        Building trust, one transaction at a time.
+                    </p>
+                 </div>
+                 
+                {/* Rotating Banner Section */}
+                <div className="pt-4">
+                  <div className={`p-6 rounded-lg transition-all duration-500 ${featureBanners[currentBannerIndex].bgColor}`}>
+                    <div className="flex items-start gap-4">
+                      <CurrentBannerIcon className={`h-8 w-8 mt-1 flex-shrink-0 ${featureBanners[currentBannerIndex].iconColor}`}/>
+                      <div>
+                          <h3 className={`font-semibold text-lg ${featureBanners[currentBannerIndex].iconColor}`}>{featureBanners[currentBannerIndex].title}</h3>
+                          <p className="text-muted-foreground text-sm mt-1">{featureBanners[currentBannerIndex].description}</p>
+                      </div>
                     </div>
-                 </div>
-                 <div className="space-y-4 pt-4">
-                     <div className="flex items-start gap-4">
-                        <ShieldCheck className="h-6 w-6 text-accent mt-1"/>
-                        <div>
-                            <h3 className="font-semibold">Risk-Controlled Testing</h3>
-                            <p className="text-muted-foreground text-sm">Simulate failures in a safe sandbox before they impact real users.</p>
-                        </div>
-                     </div>
-                     <div className="flex items-start gap-4">
-                        <TrendingUp className="h-6 w-6 text-accent mt-1"/>
-                        <div>
-                            <h3 className="font-semibold">Data-Driven Decisions</h3>
-                            <p className="text-muted-foreground text-sm">Replace guesswork with clear metrics and AI-powered insights.</p>
-                        </div>
-                     </div>
-                     <div className="flex items-start gap-4">
-                        <Zap className="h-6 w-6 text-accent mt-1"/>
-                        <div>
-                            <h3 className="font-semibold">Accelerate Go-Live</h3>
-                            <p className="text-muted-foreground text-sm">Move from staging to production faster and with greater reliability.</p>
-                        </div>
-                     </div>
-                 </div>
+                  </div>
+                </div>
             </div>
         </div>
 
