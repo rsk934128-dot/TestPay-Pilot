@@ -18,7 +18,6 @@ import {
   Projector,
   Loader2,
 } from 'lucide-react'
-import { signOut } from 'firebase/auth'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -35,8 +34,7 @@ import { Icons } from '@/components/icons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { ResetDataDialog } from '@/components/reset-data-dialog'
-import { useAuth, useUser } from '@/firebase'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -55,22 +53,28 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname()
   const router = useRouter()
-  const auth = useAuth()
-  const { user, isUserLoading } = useUser()
+  const [account, setAccount] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar')
 
   useEffect(() => {
-    if (!isUserLoading && !user) {
+    const userAccount = localStorage.getItem('userAccount')
+    if (userAccount) {
+      setAccount(userAccount)
+    } else {
       router.push('/')
     }
-  }, [user, isUserLoading, router])
+    setIsLoading(false)
+  }, [router])
 
-  const handleLogout = async () => {
-    await signOut(auth)
+
+  const handleLogout = () => {
+    localStorage.removeItem('userAccount')
+    setAccount(null)
     router.push('/')
   }
 
-  if (isUserLoading || !user) {
+  if (isLoading || !account) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -131,10 +135,10 @@ export default function DashboardLayout({
               )}
               <div className="flex-1 overflow-hidden">
                 <p className="font-semibold truncate">
-                  {user.phoneNumber || 'User'}
+                  {account ? `${account.substring(0, 6)}...${account.substring(account.length - 4)}` : 'User'}
                 </p>
                 <p className="text-xs text-muted-foreground truncate">
-                  {user.uid}
+                  Connected Wallet
                 </p>
               </div>
               <DropdownMenu>

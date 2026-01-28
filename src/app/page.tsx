@@ -3,19 +3,13 @@
 import { useRouter } from 'next/navigation'
 import {
   ArrowRight,
-  Phone,
   ShieldCheck,
   TrendingUp,
   Zap,
+  Wallet,
   Loader2,
 } from 'lucide-react'
-import { useState, useEffect, useRef } from 'react'
-import {
-  RecaptchaVerifier,
-  signInWithPhoneNumber,
-  type ConfirmationResult,
-} from 'firebase/auth'
-import { doc, serverTimestamp } from 'firebase/firestore'
+import { useState, useEffect } from 'react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -25,11 +19,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Icons } from '@/components/icons'
-import { useAuth, useUser, useFirestore, setDocumentNonBlocking } from '@/firebase'
 import { useToast } from '@/hooks/use-toast'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 const featureBanners = [
   {
@@ -59,183 +51,88 @@ const featureBanners = [
 
 export default function LandingPage() {
   const router = useRouter()
-  const auth = useAuth()
-  const firestore = useFirestore()
-  const { user, isUserLoading } = useUser()
   const { toast } = useToast()
 
-  const [phoneNumber, setPhoneNumber] = useState('+8801712345678')
-  const [otp, setOtp] = useState('')
-  const [isSendingOtp, setIsSendingOtp] = useState(false)
-  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false)
-  const [confirmationResult, setConfirmationResult] =
-    useState<ConfirmationResult | null>(null)
-  const [countdown, setCountdown] = useState(0)
+  const [account, setAccount] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0)
-
-  const recaptchaVerifier = useRef<RecaptchaVerifier | null>(null)
 
   useEffect(() => {
     const bannerTimer = setInterval(() => {
-      setCurrentBannerIndex(prevIndex => (prevIndex + 1) % featureBanners.length)
+      setCurrentBannerIndex(
+        prevIndex => (prevIndex + 1) % featureBanners.length
+      )
     }, 5000) // Change banner every 5 seconds
 
     return () => clearInterval(bannerTimer)
   }, [])
-
+  
+  // Check for existing connection on mount
   useEffect(() => {
-    if (user && !isUserLoading) {
-      router.push('/dashboard')
-    }
-  }, [user, isUserLoading, router])
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout
-    if (countdown > 0) {
-      timer = setTimeout(() => setCountdown(countdown - 1), 1000)
-    }
-    return () => clearTimeout(timer)
-  }, [countdown])
-
-  const handleSendOtp = async () => {
-    if (!auth) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Authentication service not available. Please refresh.',
-      });
-      return;
-    }
-    setIsSendingOtp(true)
-    try {
-      // Lazy initialization of RecaptchaVerifier, create only if it doesn't exist
-      if (!recaptchaVerifier.current) {
-        recaptchaVerifier.current = new RecaptchaVerifier(
-          auth,
-          'recaptcha-container',
-          {
-            size: 'invisible',
-          }
-        )
-      }
-
-      const result = await signInWithPhoneNumber(
-        auth,
-        phoneNumber,
-        recaptchaVerifier.current
-      )
-      setConfirmationResult(result)
-      setCountdown(60)
-      toast({
-        title: 'OTP Sent',
-        description: `An OTP has been sent to ${phoneNumber}. (For this pilot, use 123456)`,
-      })
-    } catch (error: any) {
-      console.error('Error sending OTP:', error)
-      toast({
-        variant: 'destructive',
-        title: 'Error Sending OTP',
-        description: error.message,
-      })
-      // If an error occurs, nullify the verifier ref to allow re-creation on next attempt.
-      recaptchaVerifier.current = null;
-    } finally {
-      setIsSendingOtp(false)
-    }
-  }
-
-  const handleVerifyOtp = async (event: React.FormEvent) => {
-    event.preventDefault()
-    
-    // For pilot/demo purposes, allow login with a dummy OTP without sending one
-    if (otp === '123456' && !confirmationResult) {
-      setIsVerifyingOtp(true)
-       try {
-        // Since we don't have a real user, we can't create a document yet.
-        // We'll redirect and let the auth state handle it.
-        // This part is tricky without a real confirmation.
-        // For the demo, let's just assume a dummy login for navigation.
-        // In a real flow, you'd force OTP sending.
-        
-        // This is a placeholder for the demo to work.
-        // In a real app, you would force the user to get a real OTP.
-        const mockConfirmation = {
-            confirm: async (code: string) => {
-                if (code === '123456') {
-                    // This won't create a real user session, so this is just for navigation in the demo
-                    return Promise.resolve({} as any);
-                } else {
-                    return Promise.reject(new Error("Invalid code"));
-                }
-            }
-        }
-        await mockConfirmation.confirm(otp);
+    const checkConnection = async () => {
+      if (localStorage.getItem('userAccount')) {
         router.push('/dashboard');
-
-      } catch (e) {
-         toast({ variant: 'destructive', title: 'Invalid OTP' });
-      } finally {
-        setIsVerifyingOtp(false);
       }
-      return;
+      setIsLoading(false);
     }
+    checkConnection();
+  }, [router]);
 
-
-    if (!confirmationResult) {
+  const handleConnectWallet = async () => {
+    setIsLoading(true)
+    setError(null)
+    if ((window as any).ethereum) {
+      try {
+        const accounts: string[] = await (window as any).ethereum.request({
+          method: 'eth_requestAccounts',
+        })
+        if (accounts.length > 0) {
+          const userAccount = accounts[0]
+          setAccount(userAccount)
+          localStorage.setItem('userAccount', userAccount)
+          toast({
+            title: 'Wallet Connected',
+            description: `Connected with address: ${userAccount.substring(
+              0,
+              6
+            )}...${userAccount.substring(userAccount.length - 4)}`,
+          })
+          router.push('/dashboard')
+        }
+      } catch (e: any) {
+        setError(e.message || 'An error occurred while connecting the wallet.')
+        toast({
+          variant: 'destructive',
+          title: 'Connection Failed',
+          description: e.message || 'Could not connect to MetaMask.',
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    } else {
+      setError('MetaMask is not installed. Please install it to continue.')
       toast({
         variant: 'destructive',
-        title: 'OTP Required',
-        description: 'Please click "Send OTP" first.',
+        title: 'MetaMask Not Found',
+        description: 'Please install the MetaMask browser extension.',
       })
-      return
-    }
-
-    setIsVerifyingOtp(true)
-    try {
-      const credential = await confirmationResult.confirm(otp)
-      const loggedInUser = credential.user
-
-      const userRef = doc(firestore, 'users', loggedInUser.uid)
-      setDocumentNonBlocking(
-        userRef,
-        {
-          id: loggedInUser.uid,
-          mobileNumber: loggedInUser.phoneNumber,
-          createdAt: serverTimestamp(),
-        },
-        { merge: true }
-      )
-
-      toast({
-        title: 'Login Successful',
-        description: 'Welcome to TestPay Pilot!',
-      })
-      // The useEffect will handle the redirect to /dashboard
-    } catch (error: any) {
-      console.error('Error verifying OTP:', error)
-      toast({
-        variant: 'destructive',
-        title: 'Error Verifying OTP',
-        description: 'The OTP is incorrect. Please try again.',
-      })
-    } finally {
-      setIsVerifyingOtp(false)
+      setIsLoading(false)
     }
   }
 
   const CurrentBannerIcon = featureBanners[currentBannerIndex].icon
 
-  if (isUserLoading) {
+  if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     )
   }
-  
+
   return (
     <main className="flex min-h-screen w-full bg-secondary/30">
-      <div id="recaptcha-container"></div>
       <div className="grid w-full grid-cols-1 md:grid-cols-2">
         {/* Left side - Hero section */}
         <div className="flex flex-col justify-center items-center bg-card p-8 md:p-12">
@@ -284,71 +181,34 @@ export default function LandingPage() {
             <Card className="shadow-2xl">
               <CardHeader className="text-center">
                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-                  <Phone className="h-8 w-8 text-primary" />
+                  <Wallet className="h-8 w-8 text-primary" />
                 </div>
                 <CardTitle className="font-headline text-3xl">
-                  Pilot Access
+                  Web3 Pilot Access
                 </CardTitle>
                 <CardDescription>
-                  Enter your mobile number to get an OTP and access the pilot.
+                  Connect your MetaMask wallet to access the pilot.
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <form onSubmit={handleVerifyOtp} className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="mobile">Mobile Number</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        id="mobile"
-                        type="tel"
-                        placeholder="+8801700000000"
-                        value={phoneNumber}
-                        onChange={e => setPhoneNumber(e.target.value)}
-                        className="flex-1"
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-28"
-                        onClick={handleSendOtp}
-                        disabled={countdown > 0 || isSendingOtp}
-                      >
-                        {isSendingOtp ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : countdown > 0 ? (
-                          `${countdown}s`
-                        ) : (
-                          'Send OTP'
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="otp">One-Time Password (OTP)</Label>
-                    <Input
-                      id="otp"
-                      type="text"
-                      placeholder="123456"
-                      value={otp}
-                      onChange={e => setOtp(e.target.value)}
-                    />
-                    <p className="text-xs text-muted-foreground">
-                      For demo, you can use OTP: 123456
-                    </p>
-                  </div>
-                  <Button
-                    type="submit"
-                    className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
-                    disabled={isVerifyingOtp}
-                  >
-                    {isVerifyingOtp ? (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    ) : (
-                      'Enter Pilot'
-                    )}
-                    {!isVerifyingOtp && <ArrowRight className="ml-2 h-4 w-4" />}
-                  </Button>
-                </form>
+              <CardContent className="space-y-6">
+                {error && (
+                  <Alert variant="destructive">
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+                <Button
+                  onClick={handleConnectWallet}
+                  className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <ArrowRight className="mr-2 h-4 w-4" />
+                  )}
+                  Connect with MetaMask
+                </Button>
               </CardContent>
             </Card>
             <footer className="mt-8 text-center text-sm text-muted-foreground">
