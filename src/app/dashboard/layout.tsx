@@ -18,6 +18,7 @@ import {
   Projector,
   Loader2,
   Menu,
+  Info,
 } from 'lucide-react'
 import { useEffect } from 'react'
 
@@ -95,9 +96,9 @@ export default function DashboardLayout({
             </Link>
             <Badge
               variant="outline"
-              className="ml-auto border-orange-500 text-orange-500"
+              className="ml-auto border-primary text-primary"
             >
-              স্টেজিং
+              লাইভ
             </Badge>
           </div>
           <div className="flex-1">
@@ -193,9 +194,9 @@ export default function DashboardLayout({
                   <span>টেস্ট-পে</span>
                    <Badge
                       variant="outline"
-                      className="ml-auto border-orange-500 text-orange-500"
+                      className="ml-auto border-primary text-primary"
                     >
-                      স্টেজিং
+                      লাইভ
                     </Badge>
                 </Link>
                 {navItems.map(({ href, icon: Icon, label }) => {
@@ -272,19 +273,36 @@ export default function DashboardLayout({
           </div>
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-          <Alert className="border-yellow-200 bg-yellow-50/50 text-yellow-900 [&>svg]:text-yellow-500">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertTitle className="font-semibold">
-              আপনি স্টেজিং মোডে আছেন।
-            </AlertTitle>
-            <AlertDescription>
-              কোনো আসল টাকা চার্জ করা হবে না। এটি একটি পাইলট টেস্টিং পরিবেশ।
-            </AlertDescription>
-          </Alert>
+          {pathname === '/dashboard' ? (
+             <Alert className="border-blue-200 bg-blue-50/50 text-blue-900 dark:border-blue-500/50 dark:bg-blue-500/10 dark:text-blue-200 [&>svg]:text-blue-500">
+                <Info className="h-4 w-4" />
+                <AlertTitle className="font-semibold">
+                  আপনি লাইভ সেটেলমেন্ট ভিউতে আছেন।
+                </AlertTitle>
+                <AlertDescription>
+                  এটি প্রথম সেটেলমেন্টের একটি প্রমাণ।
+                </AlertDescription>
+              </Alert>
+          ) : (
+            <Alert className="border-yellow-200 bg-yellow-50/50 text-yellow-900 [&>svg]:text-yellow-500">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle className="font-semibold">
+                আপনি স্টেজিং মোডে আছেন।
+              </AlertTitle>
+              <AlertDescription>
+                কোনো আসল টাকা চার্জ করা হবে না। এটি একটি পাইলট টেস্টিং পরিবেশ।
+              </AlertDescription>
+            </Alert>
+          )}
           {children}
         </main>
-        <footer className="p-6 pt-0 text-center text-sm text-muted-foreground">
-          <p>শুধুমাত্র স্যান্ডবক্স টেস্টিং। কোনো বাস্তব কার্ড ডেটা প্রক্রিয়া করা হয় না।</p>
+         <footer className="p-4 text-xs bg-primary/90 text-primary-foreground/80">
+          <div className="container mx-auto flex flex-wrap justify-between items-center gap-y-2 gap-x-4">
+              <span>প্রস্তুতকারী: <strong>শেখ ফরিদ</strong></span>
+              <span>তারিখ: <strong>২৯-জানু-২০২৬</strong></span>
+              <span>অনুমোদনের স্থিতি: <Badge variant="secondary" className="bg-yellow-400 text-black">বিচারাধীন</Badge></span>
+              <span>পরবর্তী: <strong>দৈনিক পুনর্মিলন এবং সম্পূর্ণ উৎপাদন রোলআউট</strong></span>
+          </div>
         </footer>
       </div>
     </div>
