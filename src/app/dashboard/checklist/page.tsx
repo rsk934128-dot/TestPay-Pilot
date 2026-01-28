@@ -2,69 +2,143 @@
 
 import { Checkbox } from '@/components/ui/checkbox'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Lock } from 'lucide-react'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-const ChecklistItem = ({ children, id, defaultChecked = false }: { children: React.ReactNode; id: string, defaultChecked?: boolean }) => (
-  <div className="flex items-center space-x-3 rounded-lg border p-4 bg-muted/30">
-    <Checkbox id={id} defaultChecked={defaultChecked} />
-    <label
-      htmlFor={id}
-      className="text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-    >
-      {children}
-    </label>
-  </div>
+const ChecklistItem = ({ children, id }: { children: React.ReactNode; id: string }) => (
+    <div className="flex items-start space-x-3">
+        <Checkbox id={id} className="mt-1" />
+        <label
+            htmlFor={id}
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
+            {children}
+        </label>
+    </div>
 )
 
-export default function ChecklistPage() {
+export default function PromotionChecklistPage() {
 
-  const checklistData = [
-    { id: 'bank-confidence', label: 'Bank-Confidence Ready', checked: true },
-    { id: 'management-signoff', label: 'Management Sign-off', checked: false },
-    { id: 'demo-audit-ready', label: 'Demo & Audit Ready', checked: true },
-    { id: 'qa-approved', label: 'QA Approved', checked: true },
-    { id: 'ai-explanations-locked', label: 'AI Explanations Locked', checked: true },
-    { id: 'all-issues-resolved', label: 'All Issues Resolved', checked: true },
-    { id: 'admin-reviewed', label: 'Admin Reviewed', checked: true },
-  ]
+    const sections = {
+        "1. Environment & Safety": [
+            "Current environment confirmed as STAGING",
+            "LIVE environment access is locked and restricted",
+            "No test/sandbox credentials configured in LIVE",
+            "Rollback mechanism verified and documented",
+        ],
+        "2. Stability & Performance": [
+            "Minimum required test volume completed",
+            "Failure rate within approved threshold",
+            "No unresolved critical errors",
+            "Gateway uptime verified",
+            "Average response time within limits",
+        ],
+        "3. Failure Analysis & Resolution": [
+            "All failure types reviewed and categorized",
+            "Root cause identified for each critical failure",
+            "Fixes implemented and re-tested successfully",
+            "No unexplained or silent failures remain",
+        ],
+        "4. AI Explanation & Human Review": [
+            "AI explanations reviewed by QA/Admin",
+            "Low-confidence explanations manually verified",
+            "Misleading or incorrect explanations corrected or locked",
+            "AI clearly marked as advisory only",
+        ],
+        "5. Governance & Audit": [
+            "Audit logging enabled and verified",
+            "Role-based access control enforced",
+            "Destructive actions protected with confirmation",
+            "All STAGING actions traceable",
+        ],
+        "6. Launch Readiness Decision": [
+            "Launch Readiness indicator = 🟢 READY",
+            "No open incidents or unresolved investigations",
+            "Risk level assessed as LOW / ACCEPTABLE",
+        ],
+        "7. Reporting & Transparency": [
+            "Executive summary generated",
+            "Sensitive data redacted",
+            "Reports reviewed by stakeholders",
+        ]
+    }
 
-  return (
-    <div className="w-full max-w-4xl mx-auto">
-       <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="font-headline text-2xl font-semibold md:text-3xl">
-            Go-Live Readiness Checklist
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Ensures no payment system reaches production without being proven safe, and explainable.
-          </p>
-        </div>
-      </div>
-      
-      <Card className="shadow-lg">
-        <CardHeader>
-           <CardTitle>Final Sign-off</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-            <div className="p-4 rounded-lg border border-yellow-300 bg-yellow-50 text-yellow-900 dark:border-yellow-600/50 dark:bg-yellow-950/50 dark:text-yellow-200">
-                <p className="text-sm font-semibold">Gateway latency slightly elevated, consider re-testing before final approval.</p>
+    const approvalRoles = [
+        "Product Owner",
+        "Tech Lead",
+        "QA / Risk",
+        "Bank / Gateway (if required)",
+    ]
+
+    return (
+        <div className="w-full max-w-4xl mx-auto space-y-8 pb-12">
+            <div className="text-center space-y-2">
+                <h1 className="font-headline text-3xl font-semibold">
+                    STAGING → LIVE Promotion Checklist
+                </h1>
+                <p className="text-muted-foreground">
+                    Formal approval checklist for promoting the payment system from STAGING to LIVE.
+                </p>
             </div>
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {checklistData.map(item => (
-                    <ChecklistItem key={item.id} id={item.id} defaultChecked={item.checked}>
-                        {item.label}
-                    </ChecklistItem>
+
+            <div className="space-y-6">
+                {Object.entries(sections).map(([title, items]) => (
+                     <Card key={title}>
+                        <CardHeader>
+                            <CardTitle className="text-lg">{title}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            {items.map((item, index) => (
+                                <ChecklistItem key={index} id={`${title.replace(/[^a-zA-Z]/g, '')}-${index}`}>{item}</ChecklistItem>
+                            ))}
+                        </CardContent>
+                    </Card>
                 ))}
             </div>
-            <div className="flex justify-end">
-                <Button size="lg" disabled>
-                    <Lock className="mr-2 h-4 w-4" />
-                    Admin Reviewed
-                </Button>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-lg">8. Final Approval</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="overflow-x-auto">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="w-[200px]">Role</TableHead>
+                                    <TableHead>Name</TableHead>
+                                    <TableHead>Signature</TableHead>
+                                    <TableHead className="text-right w-[150px]">Date</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {approvalRoles.map(role => (
+                                    <TableRow key={role}>
+                                        <TableCell className="font-medium">{role}</TableCell>
+                                        <TableCell><div className="h-8 border-b"></div></TableCell>
+                                        <TableCell><div className="h-8 border-b"></div></TableCell>
+                                        <TableCell><div className="h-8 border-b"></div></TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </CardContent>
+            </Card>
+
+            <Card className="border-primary/50 bg-primary/10">
+                <CardHeader>
+                    <CardTitle className="text-base text-primary-foreground/90 font-bold">Final Declaration</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-sm font-semibold text-primary-foreground">
+                        All checks above have been completed and verified. The system is approved for promotion from STAGING to LIVE.
+                    </p>
+                </CardContent>
+            </Card>
+            
+            <div className="text-center text-xs text-muted-foreground pt-4">
+                <p>Document Status: Official Launch Approval Record</p>
             </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
+        </div>
+    )
 }
