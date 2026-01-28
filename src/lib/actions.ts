@@ -127,9 +127,17 @@ export async function getInterpretation(responseCode: string, gatewayMessage: st
   }
 }
 
-export async function resetAllData() {
-  resetTransactions();
-  revalidatePath('/dashboard');
-  revalidatePath('/dashboard/history');
-  redirect('/dashboard');
+export async function resetAllData(): Promise<{ success: boolean }> {
+  try {
+    // In a real app, this would be a logged, audited action.
+    console.log('Audit: Pilot data reset initiated.');
+    resetTransactions();
+    revalidatePath('/dashboard');
+    revalidatePath('/dashboard/history');
+    console.log('Audit: Pilot data reset completed.');
+    return { success: true };
+  } catch (error) {
+    console.error('Data reset failed:', error);
+    return { success: false };
+  }
 }

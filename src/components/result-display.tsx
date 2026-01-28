@@ -2,10 +2,12 @@
 
 import { useState } from 'react'
 import { Loader2, Sparkles, ThumbsUp, ThumbsDown, Info } from 'lucide-react'
+import { format } from 'date-fns'
 
 import { getInterpretation } from '@/lib/actions'
 import type { Transaction } from '@/lib/definitions'
 import type { InterpretApiResponseCodeOutput } from '@/ai/flows/interpret-api-response-codes'
+import { cn } from '@/lib/utils'
 import {
   Accordion,
   AccordionContent,
@@ -59,6 +61,8 @@ const renderInterpretation = (text: string) => {
 export function ResultDisplay({ transaction }: { transaction: Transaction }) {
   const [interpretation, setInterpretation] = useState<InterpretApiResponseCodeOutput | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [interpretationMeta, setInterpretationMeta] = useState<{ version: number, timestamp: Date | null }>({ version: 1, timestamp: null });
+  const [feedback, setFeedback] = useState<'helpful' | 'unhelpful' | null>(null);
 
   const handleInterpret = async () => {
     setIsLoading(true)
@@ -69,6 +73,7 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
     )
     if (result) {
         setInterpretation(result);
+        setInterpretationMeta(prev => ({ version: prev.version, timestamp: new Date() }));
     } else {
         setInterpretation({
             interpretation: "Could not get an interpretation at this time. The AI model may be offline or an error occurred.",
@@ -78,6 +83,17 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
     }
     setIsLoading(false)
   }
+
+  const handleFeedback = (newFeedback: 'helpful' | 'unhelpful') => {
+      // In a real app, this would be sent to a logging service.
+      // For this pilot, we just update the UI state to show interaction.
+      if (feedback === newFeedback) {
+          setFeedback(null); // Allow deselecting
+      } else {
+          setFeedback(newFeedback);
+      }
+  };
+
 
   const confidenceColor = {
     High: 'border-green-500 text-green-600',
@@ -156,6 +172,10 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
                         <AccordionContent className="pt-2 text-xs text-muted-foreground space-y-2">
                             <p><span className="font-semibold">Basis:</span> {interpretation.explanationBasis}</p>
                             <p><span className="font-semibold">Model:</span> Gemini</p>
+                            {interpretationMeta.timestamp && (
+                              <p><span className="font-semibold">Last Updated:</span> {format(interpretationMeta.timestamp, "dd MMM yyyy, HH:mm")}</p>
+                            )}
+                            <p><span className="font-semibold">Explanation Version:</span> v{interpretationMeta.version}.0</p>
                             <div className="flex items-center gap-2">
                             <span className="font-semibold">Reviewed:</span>
                             <Badge variant="secondary">Not Yet</Badge>
@@ -172,7 +192,7 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="h-7 w-7">
+                                    <Button variant="ghost" size="icon" className={cn("h-7 w-7", feedback === 'helpful' && 'bg-green-100 text-green-700 hover:bg-green-100/80')} onClick={() => handleFeedback('helpful')}>
                                         <ThumbsUp className="h-4 w-4" />
                                     </Button>
                                 </TooltipTrigger>
@@ -184,7 +204,7 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="h-7 w-7">
+                                    <Button variant="ghost" size="icon" className={cn("h-7 w-7", feedback === 'unhelpful' && 'bg-red-100 text-red-700 hover:bg-red-100/80')} onClick={() => handleFeedback('unhelpful')}>
                                         <ThumbsDown className="h-4 w-4" />
                                     </Button>
                                 </TooltipTrigger>
