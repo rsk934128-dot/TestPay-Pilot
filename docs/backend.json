@@ -33,44 +33,11 @@
     ]
   },
   "firestore": {
-    "structure": [
-      {
-        "path": "/users/{userId}",
-        "definition": {
-          "entityName": "User",
-          "schema": {
-            "$ref": "#/backend/entities/User"
-          },
-          "description": "Stores user data. Each document is uniquely identified by the user's UID. Authentication is handled via Firebase Authentication (phone).",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier for the user, corresponding to the Firebase Auth UID."
-            }
-          ]
-        }
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/User"
       },
-      {
-        "path": "/users/{userId}/transactions/{transactionId}",
-        "definition": {
-          "entityName": "Transaction",
-          "schema": {
-            "$ref": "#/backend/entities/Transaction"
-          },
-          "description": "Stores transaction data for each user. Path-based ownership ensures only the user can access their transaction data.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier for the user, corresponding to the Firebase Auth UID."
-            },
-            {
-              "name": "transactionId",
-              "description": "The unique identifier for the transaction."
-            }
-          ]
-        }
-      }
-    ],
-    "reasoning": "The Firestore data structure is designed to support the TestPay Pilot application, focusing on secure authentication and transaction simulation. It prioritizes authorization independence by avoiding hierarchical `get()` calls in security rules. This is achieved by using path-based ownership for user data, thus avoiding any denormalization.\n\nThe `/users/{userId}` collection stores user information. Transactions are nested under each user (`/users/{userId}/transactions/{transactionId}`), providing clear ownership and simplifying security rules. This structure facilitates secure `list` operations because access control is based on path ownership, ensuring that users can only access their own transaction data. The design adheres to the principle of Structural Segregation, as each collection contains data with homogeneous security requirements. Explicit state modeling is implicitly achieved through the success/failure status of transactions. This architecture supports the QAPs by enabling secure filtering and authorization based on a user's auth UID and the document path."
+      "description": "Stores user profile information. Document ID is the user's UID from Firebase Auth."
+    }
   }
 }

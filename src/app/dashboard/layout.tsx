@@ -18,6 +18,7 @@ import {
   Projector,
   Loader2,
 } from 'lucide-react'
+import { useEffect } from 'react'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -34,7 +35,8 @@ import { Icons } from '@/components/icons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { ResetDataDialog } from '@/components/reset-data-dialog'
-import { useEffect, useState } from 'react'
+import { useUser, signOutNonBlocking, useAuth } from '@/firebase'
+
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -53,28 +55,23 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname()
   const router = useRouter()
-  const [account, setAccount] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const auth = useAuth()
+  const { user, isLoading } = useUser()
   const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar')
 
   useEffect(() => {
-    const userAccount = localStorage.getItem('userAccount')
-    if (userAccount) {
-      setAccount(userAccount)
-    } else {
+    if (!isLoading && !user) {
       router.push('/')
     }
-    setIsLoading(false)
-  }, [router])
-
+  }, [user, isLoading, router])
 
   const handleLogout = () => {
-    localStorage.removeItem('userAccount')
-    setAccount(null)
-    router.push('/')
+    if (auth) {
+      signOutNonBlocking(auth)
+    }
   }
 
-  if (isLoading || !account) {
+  if (isLoading || !user) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -135,10 +132,10 @@ export default function DashboardLayout({
               )}
               <div className="flex-1 overflow-hidden">
                 <p className="font-semibold truncate">
-                  {account ? `${account.substring(0, 6)}...${account.substring(account.length - 4)}` : 'User'}
+                  {user.phoneNumber}
                 </p>
                 <p className="text-xs text-muted-foreground truncate">
-                  Connected Wallet
+                  Authenticated User
                 </p>
               </div>
               <DropdownMenu>
