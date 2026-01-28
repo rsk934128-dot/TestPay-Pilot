@@ -49,8 +49,7 @@ const presets = [
 export function PaymentForm() {
   const { toast } = useToast()
   const initialState: State = { message: null, errors: {} }
-  const [state, formAction] = useActionState(createTestPayment, initialState)
-  const [isPending, setIsPending] = useState(false)
+  const [state, formAction, isPending] = useActionState(createTestPayment, initialState)
 
   const [detectedCardType, setDetectedCardType] = useState<CardType>('Other')
 
@@ -87,7 +86,6 @@ export function PaymentForm() {
   }, [state, toast])
 
   const onSubmit = (data: FormValues) => {
-    setIsPending(true)
     const finalAmount = data.amount === 'custom' ? data.customAmount : data.amount
     const formData = new FormData()
     formData.append('cardNumber', data.cardNumber.replace(/\s/g, ''))
