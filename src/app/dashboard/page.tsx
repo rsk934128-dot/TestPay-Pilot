@@ -1,0 +1,145 @@
+import Link from 'next/link'
+import {
+  ArrowUpRight,
+  CheckCircle2,
+  CircleDollarSign,
+  XCircle,
+} from 'lucide-react'
+import { format } from 'date-fns'
+
+import { getTransactions, getTransactionStats } from '@/lib/data'
+import { formatCurrency, getCardType } from '@/lib/utils'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Icons } from '@/components/icons'
+
+export default function DashboardPage() {
+  const stats = getTransactionStats()
+  const recentTransactions = getTransactions().slice(0, 5)
+
+  return (
+    <>
+      <div className="flex items-center">
+        <h1 className="font-headline text-lg font-semibold md:text-2xl">
+          Dashboard
+        </h1>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Total Test Transactions
+            </CardTitle>
+            <CircleDollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.total}</div>
+            <p className="text-xs text-muted-foreground">
+              Across all test cards
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Successful Payments
+            </CardTitle>
+            <CheckCircle2 className="h-4 w-4 text-green-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.success}</div>
+            <p className="text-xs text-muted-foreground">
+              {stats.total > 0 ? `${((stats.success / stats.total) * 100).toFixed(0)}% success rate` : 'No transactions yet'}
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Failed Payments</CardTitle>
+            <XCircle className="h-4 w-4 text-red-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.failed}</div>
+             <p className="text-xs text-muted-foreground">
+              {stats.total > 0 ? `${((stats.failed / stats.total) * 100).toFixed(0)}% failure rate` : 'No transactions yet'}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+      <div>
+        <Card>
+          <CardHeader className="flex flex-row items-center">
+            <div className="grid gap-2">
+              <CardTitle>Recent Transactions</CardTitle>
+              <CardDescription>
+                The last 5 test payments made.
+              </CardDescription>
+            </div>
+            <Button asChild size="sm" className="ml-auto gap-1">
+              <Link href="/dashboard/history">
+                View All
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Card</TableHead>
+                  <TableHead className="text-center">Status</TableHead>
+                  <TableHead className="text-right">Amount</TableHead>
+                  <TableHead className="text-right">Date</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {recentTransactions.map(tx => {
+                  const cardType = getCardType(tx.cardNumber)
+                  const CardIcon = cardType === 'Other' ? CreditCard : Icons[cardType.toLowerCase() as keyof typeof Icons]
+                  
+                  return (
+                    <TableRow key={tx.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                           <CardIcon className="h-8 w-auto" />
+                           <div>
+                              <div className="font-medium">{tx.cardType}</div>
+                              <div className="text-xs text-muted-foreground">
+                                **** {tx.cardNumber.slice(-4)}
+                              </div>
+                           </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Badge variant={tx.status === 'Success' ? 'default' : 'destructive'} className={tx.status === 'Success' ? `bg-green-100 text-green-800` : ''}>
+                          {tx.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">{formatCurrency(tx.amount)}</TableCell>
+                      <TableCell className="text-right">{format(new Date(tx.date), "dd MMM, yyyy")}</TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
+    </>
+  )
+}
