@@ -42,7 +42,7 @@ const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/dashboard/payment', icon: CreditCard, label: 'New Payment' },
   { href: '/dashboard/history', icon: History, label: 'History' },
-  { href: '/dashboard/readiness', icon: ShieldCheck, label: 'Launch Readiness' },
+  { href: '/dashboard/readiness', icon: ShieldCheck, label: 'System Readiness' },
   { href: '/dashboard/checklist', icon: ClipboardCheck, label: 'Promotion Checklist' },
   { href: '/dashboard/pitch', icon: Mic, label: 'Pitch Guide' },
   { href: '/dashboard/deck', icon: Projector, label: 'Executive Deck' },
@@ -95,7 +95,7 @@ export default function DashboardLayout({
               variant="outline"
               className="ml-auto border-orange-500 text-orange-500"
             >
-              TEST MODE
+              STAGING
             </Badge>
           </div>
           <div className="flex-1">
@@ -177,7 +177,7 @@ export default function DashboardLayout({
           <Alert className="border-yellow-200 bg-yellow-50/50 text-yellow-900 [&>svg]:text-yellow-500">
             <AlertTriangle className="h-4 w-4" />
             <AlertTitle className="font-semibold">
-              You are in TEST MODE.
+              You are in STAGING MODE.
             </AlertTitle>
             <AlertDescription>
               No real money will be charged. This is a pilot testing
