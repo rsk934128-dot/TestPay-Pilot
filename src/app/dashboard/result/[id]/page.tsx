@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, useParams } from 'next/navigation'
 import { useState } from 'react'
 import {
   CheckCircle2,
@@ -27,7 +27,8 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { ResultDisplay } from '@/components/result-display'
 
-export default function ResultPage({ params }: { params: { id: string } }) {
+export default function ResultPage() {
+  const params = useParams<{ id: string }>()
   const [copied, setCopied] = useState<Record<string, boolean>>({})
   const transaction = getTransactionById(params.id)
 
