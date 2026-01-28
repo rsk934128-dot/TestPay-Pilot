@@ -2,7 +2,8 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowRight, Loader2 } from 'lucide-react'
-import { useActionState, useEffect, useState } from 'react'
+import { useEffect, useState, useTransition } from 'react'
+import { useFormState } from 'react-dom'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -49,7 +50,8 @@ const presets = [
 export function PaymentForm() {
   const { toast } = useToast()
   const initialState: State = { message: null, errors: {} }
-  const [state, formAction, isPending] = useActionState(createTestPayment, initialState)
+  const [state, formAction] = useFormState(createTestPayment, initialState)
+  const [isPending, startTransition] = useTransition()
 
   const [detectedCardType, setDetectedCardType] = useState<CardType>('Other')
 
@@ -94,7 +96,9 @@ export function PaymentForm() {
     formData.append('amount', finalAmount || '0')
     formData.append('cardType', getCardType(data.cardNumber.replace(/\s/g, '')))
 
-    formAction(formData)
+    startTransition(() => {
+      formAction(formData)
+    })
   }
   
   const CardIcon = {
@@ -220,7 +224,6 @@ export function PaymentForm() {
                 <FormMessage />
               </FormItem>
             )}
-          />
         )}
         
         <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90" disabled={isPending}>
