@@ -36,13 +36,13 @@ export default function HistoryPage() {
           <div className="flex flex-col items-center gap-1 text-center">
             <History className="h-12 w-12 text-muted-foreground" />
             <h3 className="mt-4 text-2xl font-bold tracking-tight font-headline">
-              No Transaction History
+              কোনো লেনদেনের ইতিহাস নেই
             </h3>
             <p className="text-sm text-muted-foreground">
-              You haven't made any test payments yet.
+              আপনি এখনো কোনো টেস্ট পেমেন্ট করেননি।
             </p>
             <Button className="mt-4 bg-accent text-accent-foreground hover:bg-accent/90" asChild>
-              <Link href="/dashboard/payment">Make a Payment</Link>
+              <Link href="/dashboard/payment">একটি পেমেন্ট করুন</Link>
             </Button>
           </div>
         </div>
@@ -53,23 +53,23 @@ export default function HistoryPage() {
     <>
       <div className="flex items-center">
         <h1 className="font-headline text-lg font-semibold md:text-2xl">
-          Transaction History
+          লেনদেনের ইতিহাস
         </h1>
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>All Transactions</CardTitle>
-          <CardDescription>A complete log of all your test payments.</CardDescription>
+          <CardTitle>সমস্ত লেনদেন</CardTitle>
+          <CardDescription>আপনার সমস্ত টেস্ট পেমেন্টের একটি সম্পূর্ণ লগ।</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Card</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
-                <TableHead className="text-right">Date</TableHead>
-                <TableHead className="text-right">Transaction ID</TableHead>
+                <TableHead>কার্ড</TableHead>
+                <TableHead>স্ট্যাটাস</TableHead>
+                <TableHead className="text-right">পরিমাণ</TableHead>
+                <TableHead className="text-right">তারিখ</TableHead>
+                <TableHead className="text-right">লেনদেন আইডি</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -91,7 +91,7 @@ export default function HistoryPage() {
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline" className={tx.status === 'Success' ? 'border-chart-2/60 bg-chart-2/10 text-chart-2' : 'border-destructive/60 bg-destructive/10 text-destructive'}>
-                          {tx.status}
+                          {tx.status === 'Success' ? 'সফল' : 'ব্যর্থ'}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">{formatCurrency(tx.amount)}</TableCell>

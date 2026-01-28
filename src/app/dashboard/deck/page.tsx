@@ -13,34 +13,34 @@ import { CheckCircle, Shield, Target } from 'lucide-react'
 const slides = [
   {
     icon: Target,
-    title: 'Slide 1: The Ask',
-    heading: 'Seeking Approval for LIVE Promotion',
+    title: 'স্লাইড ১: অনুরোধ',
+    heading: 'লাইভ প্রোমোশনের জন্য অনুমোদন চাওয়া হচ্ছে',
     points: [
-      'Today, we are seeking approval to promote our payment system from STAGING to LIVE.',
-      'This recommendation is based on controlled testing, audited evidence, and clear risk assessment—not assumptions.',
+      'আজ, আমরা আমাদের পেমেন্ট সিস্টেমকে স্টেজিং থেকে লাইভে প্রোমোট করার জন্য অনুমোদন চাইছি।',
+      'এই সুপারিশটি নিয়ন্ত্রিত টেস্টিং, নিরীক্ষিত প্রমাণ এবং স্পষ্ট ঝুঁকি মূল্যায়নের উপর ভিত্তি করে করা—অনুমানের উপর নয়।',
     ],
   },
   {
     icon: Shield,
-    title: 'Slide 2: The Evidence & Governance',
-    heading: 'Data-Driven Confidence',
+    title: 'স্লাইড ২: প্রমাণ ও প্রশাসন',
+    heading: 'ডেটা-চালিত আত্মবিশ্বাস',
     points: [
-      'Failure rate is within approved threshold.',
-      'Zero unresolved critical issues remain.',
-      'All failures have identified root causes.',
-      'Gateway stability meets performance limits.',
-      'Full audit logs and role-based access are enforced.',
-      'System Launch Readiness Indicator is GREEN.',
+      'ব্যর্থতার হার অনুমোদিত সীমার মধ্যে।',
+      'কোনো অমীমাংসিত গুরুতর সমস্যা নেই।',
+      'সমস্ত ব্যর্থতার মূল কারণ চিহ্নিত করা হয়েছে।',
+      'গেটওয়ের স্থিতিশীলতা পারফরম্যান্স সীমা পূরণ করে।',
+      'সম্পূর্ণ অডিট লগ এবং ভূমিকা-ভিত্তিক অ্যাক্সেস প্রয়োগ করা হয়েছে।',
+      'সিস্টেম লঞ্চ প্রস্তুতি সূচক সবুজ।',
     ],
   },
   {
     icon: CheckCircle,
-    title: 'Slide 3: The Decision',
-    heading: 'Recommendation: Safe to Proceed',
+    title: 'স্লাইড ৩: সিদ্ধান্ত',
+    heading: 'সুপারিশ: এগিয়ে যাওয়া নিরাপদ',
     points: [
-      'Based on objective criteria, the system recommends: Safe to proceed to LIVE.',
-      'With the controls, data, and safeguards in place, we are requesting final approval.',
-      'If not approved, the system remains locked—no risk is introduced.',
+      'উদ্দেশ্যমূলক মানদণ্ডের উপর ভিত্তি করে, সিস্টেম সুপারিশ করে: লাইভে এগিয়ে যাওয়া নিরাপদ।',
+      'নিয়ন্ত্রণ, ডেটা এবং সুরক্ষা ব্যবস্থা সহ, আমরা চূড়ান্ত অনুমোদনের জন্য অনুরোধ করছি।',
+      'অনুমোদিত না হলে, সিস্টেমটি লক থাকবে—কোনো ঝুঁকি তৈরি হবে না।',
     ],
   },
 ]
@@ -50,10 +50,10 @@ export default function ExecutiveDeckPage() {
     <div className="w-full h-full flex flex-col items-center justify-center p-4">
       <div className="text-center mb-8">
         <h1 className="font-headline text-3xl font-semibold">
-          3-Slide Executive Deck
+          ৩-স্লাইডের এক্সিকিউটিভ ডেক
         </h1>
         <p className="text-muted-foreground">
-          A concise visual summary for CEO/Board approval.
+          সিইও/বোর্ডের অনুমোদনের জন্য একটি সংক্ষিপ্ত ভিজ্যুয়াল সারসংক্ষেপ।
         </p>
       </div>
 
@@ -75,9 +75,9 @@ export default function ExecutiveDeckPage() {
                         <ul className={`space-y-4 text-lg text-muted-foreground ${index === 1 ? 'text-left list-disc pl-6' : ''}`}>
                             {slide.points.map((point, i) => (
                                 <li key={i} className={index === 1 ? 'pl-2' : ''}>
-                                    {point.includes("GREEN") ? (
+                                    {point.includes("সবুজ") ? (
                                         <>
-                                            System Launch Readiness Indicator is <span className="font-bold text-chart-2">GREEN.</span>
+                                            সিস্টেম লঞ্চ প্রস্তুতি সূচক <span className="font-bold text-chart-2">সবুজ।</span>
                                         </>
                                     ) : (
                                         point
@@ -95,7 +95,7 @@ export default function ExecutiveDeckPage() {
         <CarouselPrevious className="-left-4 md:-left-12" />
         <CarouselNext className="-right-4 md:-right-12" />
       </Carousel>
-       <p className="text-xs text-muted-foreground mt-8">Use arrow keys or buttons to navigate the slides.</p>
+       <p className="text-xs text-muted-foreground mt-8">স্লাইড নেভিগেট করতে তীরচিহ্ন বা বাটন ব্যবহার করুন।</p>
     </div>
   )
 }

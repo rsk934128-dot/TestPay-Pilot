@@ -17,15 +17,15 @@ async function simulateGatewayProcessing(amount: number) {
     return {
       status: 'Success',
       responseCode: '00',
-      gatewayMessage: 'Transaction Approved',
+      gatewayMessage: 'লেনদেন অনুমোদিত',
       transactionId: `tpay_${Date.now()}${Math.random().toString(36).substring(2, 10)}`,
     };
   } else {
     const errorCodes = [
-      { code: '51', message: 'Insufficient Funds' },
-      { code: '14', message: 'Invalid Card Number' },
-      { code: '54', message: 'Expired Card' },
-      { code: '05', message: 'Do Not Honor' },
+      { code: '51', message: 'অপর্যাপ্ত তহবিল' },
+      { code: '14', message: 'অবৈধ কার্ড নম্বর' },
+      { code: '54', message: 'মেয়াদোত্তীর্ণ কার্ড' },
+      { code: '05', message: 'লেনদেন প্রত্যাখ্যান করা হয়েছে' },
     ];
     const randomError = errorCodes[Math.floor(Math.random() * errorCodes.length)];
     return {
@@ -40,15 +40,15 @@ async function simulateGatewayProcessing(amount: number) {
 const FormSchema = z.object({
   id: z.string(),
   cardNumber: z.string().refine(val => /^\d{13,16}$/.test(val), {
-    message: 'Card number must be 13-16 digits.',
+    message: 'কার্ড নম্বর অবশ্যই ১৩-১৬ সংখ্যার হতে হবে।',
   }),
   expiryDate: z.string().refine(val => /^(0[1-9]|1[0-2])\/\d{2}$/.test(val), {
-    message: 'Use MM/YY format.',
+    message: 'MM/YY ফরম্যাট ব্যবহার করুন।',
   }),
   cvv: z.string().refine(val => /^\d{3,4}$/.test(val), {
-    message: 'CVV must be 3-4 digits.',
+    message: 'CVV অবশ্যই ৩-৪ সংখ্যার হতে হবে।',
   }),
-  amount: z.coerce.number().positive({ message: 'Amount must be positive.' }),
+  amount: z.coerce.number().positive({ message: 'পরিমাণ অবশ্যই ধনাত্মক হতে হবে।' }),
   cardType: z.enum(['Visa', 'Mastercard', 'Amex', 'Other']),
 });
 
@@ -76,7 +76,7 @@ export async function createTestPayment(prevState: State, formData: FormData) {
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-      message: 'Invalid form data. Please check your inputs.',
+      message: 'অবৈধ ফর্ম ডেটা। অনুগ্রহ করে আপনার ইনপুট চেক করুন।',
     };
   }
 
@@ -102,7 +102,7 @@ export async function createTestPayment(prevState: State, formData: FormData) {
     
   } catch (error) {
     return {
-      message: 'Gateway simulation failed. Please try again.',
+      message: 'গেটওয়ে সিমুলেশন ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।',
     };
   }
 

@@ -17,18 +17,18 @@ import React from 'react'
 const features = [
     {
         icon: <ShieldCheck className="h-10 w-10 text-primary" />,
-        title: 'Risk-First Simulation',
-        description: 'Safely test payment flows in a sandboxed environment without processing real card data.',
+        title: 'ঝুঁকি-প্রথম সিমুলেশন',
+        description: 'বাস্তব কার্ড ডেটা প্রক্রিয়া না করে একটি স্যান্ডবক্স পরিবেশে নিরাপদে পেমেন্ট ফ্লো পরীক্ষা করুন।',
     },
     {
         icon: <Cpu className="h-10 w-10 text-primary" />,
-        title: 'AI-Powered Analysis',
-        description: 'Get human-readable explanations for complex gateway response codes and messages in seconds.',
+        title: 'AI-চালিত বিশ্লেষণ',
+        description: 'জটিল গেটওয়ে প্রতিক্রিয়া কোড এবং বার্তাগুলির জন্য সেকেন্ডের মধ্যে মানুষের পাঠযোগ্য ব্যাখ্যা পান।',
     },
     {
         icon: <BarChart className="h-10 w-10 text-primary" />,
-        title: 'Launch Readiness',
-        description: 'Use data-driven checklists and executive decks to make confident promotion decisions.',
+        title: 'লঞ্চ প্রস্তুতি',
+        description: 'আত্মবিশ্বাসের সাথে প্রচারের সিদ্ধান্ত নিতে ডেটা-চালিত চেকলিস্ট এবং এক্সিকিউটিভ ডেক ব্যবহার করুন।',
     },
 ]
 
@@ -46,13 +46,13 @@ export default function LandingPage() {
              <div className="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-lg">
                 <CreditCard className="w-5 h-5 text-primary" />
             </div>
-            <span className="font-bold font-headline ml-2">TestPay Pilot</span>
+            <span className="font-bold font-headline ml-2">টেস্ট-পে পাইলট</span>
           </div>
           <div className="flex flex-1 items-center justify-end space-x-2">
             <nav className="flex items-center">
               <Button asChild>
                 <Link href="/dashboard">
-                  Launch App <ArrowRight className="ml-2 h-4 w-4" />
+                  অ্যাপ চালু করুন <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </nav>
@@ -89,19 +89,19 @@ export default function LandingPage() {
           <div className="container relative z-10 text-center">
             <div className="max-w-3xl mx-auto">
               <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl font-headline">
-                Go LIVE with Confidence
+                আত্মবিশ্বাসের সাথে লাইভ করুন
               </h1>
               <p className="mt-6 text-lg text-muted-foreground">
-                TestPay Pilot is a risk-control platform for payment systems, moving beyond simple QA. It provides evidence-based launch readiness, ensuring every promotion to LIVE is safe, audited, and approved.
+              টেস্ট-পে পাইলট হল পেমেন্ট সিস্টেমের জন্য একটি ঝুঁকি-নিয়ন্ত্রণ প্ল্যাটফর্ম, যা সাধারণ QA-এর বাইরেও কাজ করে। এটি প্রমাণ-ভিত্তিক লঞ্চ প্রস্তুতির নিশ্চয়তা দেয়, যাতে প্রতিটি লাইভ প্রোমোশন নিরাপদ, নিরীক্ষিত এবং অনুমোদিত হয়।
               </p>
               <div className="mt-8 flex justify-center gap-4">
                 <Button size="lg" asChild>
                   <Link href="/dashboard">
-                    Go to Dashboard <ArrowRight className="ml-2" />
+                    ড্যাশবোর্ডে যান <ArrowRight className="ml-2" />
                   </Link>
                 </Button>
                  <Button size="lg" variant="outline" asChild>
-                  <Link href="#features">Learn More</Link>
+                  <Link href="#features">আরও জানুন</Link>
                 </Button>
               </div>
             </div>
@@ -112,10 +112,10 @@ export default function LandingPage() {
           <div className="container">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl font-headline">
-                Why TestPay Pilot?
+                কেন টেস্ট-পে পাইলট?
               </h2>
               <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
-                A purpose-built platform designed for the final step before LIVE: authoritative, data-driven decision making.
+              লাইভের আগে চূড়ান্ত পদক্ষেপের জন্য নির্মিত একটি প্ল্যাটফর্ম: ಅಧಿಕೃತ, ডেটা-চালিত সিদ্ধান্ত গ্রহণ।
               </p>
             </div>
             <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-3">
@@ -138,7 +138,7 @@ export default function LandingPage() {
       <footer className="border-t">
         <div className="container flex items-center justify-center h-16">
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} TestPay Pilot. For demonstration purposes only.
+            &copy; {new Date().getFullYear()} টেস্ট-পে পাইলট। শুধুমাত্র প্রদর্শনের উদ্দেশ্যে।
           </p>
         </div>
       </footer>

@@ -33,9 +33,9 @@ export function TransactionChart({ stats }: { stats: TransactionStats }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Transaction Overview</CardTitle>
+        <CardTitle>লেনদেনের সংক্ষিপ্ত বিবরণ</CardTitle>
         <CardDescription>
-          A visual summary of successful vs. failed payments.
+          সফল বনাম ব্যর্থ পেমেন্টের একটি ভিজ্যুয়াল সারসংক্ষেপ।
         </CardDescription>
       </CardHeader>
       <CardContent className="pl-0">
@@ -52,7 +52,7 @@ export function TransactionChart({ stats }: { stats: TransactionStats }) {
                 formatter={(value, name, props) => {
                     const total = props.payload.success + props.payload.failed;
                     const percentage = total > 0 ? (Number(value) / total * 100).toFixed(0) : 0;
-                    const key = name === 'success' ? 'Successful' : 'Failed'
+                    const key = name === 'success' ? 'সফল' : 'ব্যর্থ'
                     return [`${value} (${percentage}%)`, key]
                 }}
                 cursor={{ fill: 'hsl(var(--muted))' }}

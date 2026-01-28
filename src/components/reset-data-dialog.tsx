@@ -35,15 +35,15 @@ export function ResetDataDialog({ children }: { children: React.ReactNode }) {
     
     if (result.success) {
       toast({
-        title: "Pilot data reset completed safely.",
-        description: "All test transaction data has been successfully deleted.",
+        title: "পাইলট ডেটা রিসেট সফলভাবে সম্পন্ন হয়েছে।",
+        description: "সমস্ত টেস্ট লেনদেনের ডেটা সফলভাবে মুছে ফেলা হয়েছে।",
       })
       setOpen(false) 
     } else {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Could not reset pilot data. Please try again.",
+        title: "ত্রুটি",
+        description: "পাইলট ডেটা রিসেট করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।",
       })
     }
   }
@@ -63,19 +63,19 @@ export function ResetDataDialog({ children }: { children: React.ReactNode }) {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>আপনি কি পুরোপুরি নিশ্চিত?</AlertDialogTitle>
           <AlertDialogDescription as="div" className="space-y-4 pt-2">
             <p>
-              This action is irreversible. It will permanently delete all pilot transaction data.
+              এই কাজটি необратиযোগ্য। এটি স্থায়ীভাবে সমস্ত পাইলট লেনদেনের ডেটা মুছে ফেলবে।
             </p>
             {step === 1 && (
                 <>
                 <div className="rounded-lg border border-orange-300 bg-orange-50 p-3 text-orange-900 dark:border-orange-600/50 dark:bg-orange-950/50 dark:text-orange-200">
-                    <p className="text-sm font-semibold">You are operating in the <span className="font-mono bg-orange-200/50 px-1 py-0.5 rounded-sm">TEST</span> environment.</p>
+                    <p className="text-sm font-semibold">আপনি <span className="font-mono bg-orange-200/50 px-1 py-0.5 rounded-sm">টেস্ট</span> পরিবেশে কাজ করছেন।</p>
                 </div>
                 <div>
                   <Label htmlFor="confirmation-input" className="font-normal">
-                    To confirm, please type <strong className="font-mono text-destructive">{expectedConfirmation}</strong> in the box below.
+                    নিশ্চিত করতে, অনুগ্রহ করে নিচের বাক্সে <strong className="font-mono text-destructive">{expectedConfirmation}</strong> টাইপ করুন।
                   </Label>
                   <Input
                     id="confirmation-input"
@@ -90,20 +90,20 @@ export function ResetDataDialog({ children }: { children: React.ReactNode }) {
             )}
              {step === 2 && (
                 <div className="rounded-lg border-2 border-destructive bg-red-50 p-4 text-destructive-foreground">
-                    <h4 className="font-bold text-red-800">Final Confirmation</h4>
-                    <p className="text-sm text-red-700">This is your last chance. Clicking 'Reset' will delete all data permanently.</p>
+                    <h4 className="font-bold text-red-800">চূড়ান্ত নিশ্চিতকরণ</h4>
+                    <p className="text-sm text-red-700">এটি আপনার শেষ সুযোগ। 'রিসেট' ক্লিক করলে সমস্ত ডেটা স্থায়ীভাবে মুছে যাবে।</p>
                 </div>
             )}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending} onClick={() => setStep(1)}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending} onClick={() => setStep(1)}>বাতিল</AlertDialogCancel>
           {step === 1 ? (
             <Button
                 onClick={() => setStep(2)}
                 disabled={confirmationText !== expectedConfirmation}
             >
-                Continue
+                চালিয়ে যান
             </Button>
           ) : (
             <AlertDialogAction 
@@ -112,7 +112,7 @@ export function ResetDataDialog({ children }: { children: React.ReactNode }) {
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Reset Pilot Data
+              পাইলট ডেটা রিসেট করুন
             </AlertDialogAction>
           )}
 

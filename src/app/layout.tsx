@@ -4,8 +4,8 @@ import { Toaster } from "@/components/ui/toaster"
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 export const metadata: Metadata = {
-  title: 'TestPay Pilot',
-  description: 'Credit/Debit Card System – Pilot Test App',
+  title: 'টেস্ট-পে পাইলট',
+  description: 'ক্রেডিট/ডেবিট কার্ড সিস্টেম – পাইলট টেস্ট অ্যাপ',
 };
 
 export default function RootLayout({
@@ -14,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className="dark">
+    <html lang="bn" suppressHydrationWarning className="dark">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

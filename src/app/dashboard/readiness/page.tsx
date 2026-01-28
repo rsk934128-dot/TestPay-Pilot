@@ -14,14 +14,14 @@ import { Button } from '@/components/ui/button'
 // This data would come from a backend monitoring service in a real app.
 const readinessData = {
   core: {
-    sandboxStability: { status: 'Stable', code: 'UP' },
+    sandboxStability: { status: 'স্থিতিশীল', code: 'UP' },
     criticalIssues: 0,
-    failureAnalysis: { status: 'Complete', issues: 0 },
-    governance: { status: 'Active' },
+    failureAnalysis: { status: 'সম্পূর্ণ', issues: 0 },
+    governance: { status: 'সক্রিয়' },
   },
   environment: {
-    current: 'STAGING',
-    dataSegregation: { status: 'Verified' },
+    current: 'স্টেজিং',
+    dataSegregation: { status: 'যাচাইকৃত' },
   },
   isReady: true,
 }
@@ -32,7 +32,7 @@ const statusIcons = {
     DOWN: <XCircle className="h-5 w-5 text-destructive" />,
 }
 
-const renderStatus = (status: 'Stable' | 'Complete' | 'Active' | 'Verified') => (
+const renderStatus = (status: 'স্থিতিশীল' | 'সম্পূর্ণ' | 'সক্রিয়' | 'যাচাইকৃত') => (
   <div className="flex items-center gap-2">
     <CheckCircle className="h-5 w-5 text-chart-2" />
     <span className="font-semibold">{status}</span>
@@ -46,10 +46,10 @@ export default function ReadinessPage() {
     <>
       <div className="flex flex-col items-start mb-6">
         <h1 className="font-headline text-2xl font-semibold md:text-3xl">
-          System Readiness & Control
+          সিস্টেম প্রস্তুতি ও নিয়ন্ত্রণ
         </h1>
         <p className="text-muted-foreground mt-1">
-          Final system-level checks before LIVE promotion.
+          লাইভ প্রোমোশনের আগে চূড়ান্ত সিস্টেম-স্তরের পরীক্ষা।
         </p>
       </div>
 
@@ -58,9 +58,9 @@ export default function ReadinessPage() {
                  {isReady ? <ShieldCheck className="h-8 w-8 text-chart-2" /> : <XCircle className="h-8 w-8 text-destructive" />}
                 <div>
                     <CardTitle className={`text-lg font-bold ${isReady ? 'text-chart-2' : 'text-destructive'}`}>
-                        {isReady ? 'System is Ready for LIVE Promotion' : 'LIVE Promotion is Blocked'}
+                        {isReady ? 'সিস্টেম লাইভ প্রোমোশনের জন্য প্রস্তুত' : 'লাইভ প্রোমোশন ব্লক করা হয়েছে'}
                     </CardTitle>
-                     <p className="text-sm text-muted-foreground">All automated checks have passed successfully.</p>
+                     <p className="text-sm text-muted-foreground">সমস্ত স্বয়ংক্রিয় পরীক্ষা সফলভাবে পাস হয়েছে।</p>
                 </div>
             </CardHeader>
       </Card>
@@ -69,11 +69,11 @@ export default function ReadinessPage() {
         <Card>
           <CardHeader className="flex-row items-center gap-4 space-y-0">
             <Activity className="w-8 h-8 text-primary" />
-            <CardTitle>Core System Checks</CardTitle>
+            <CardTitle>কোর সিস্টেম পরীক্ষা</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-md">
               <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Sandbox Stability</span>
+                  <span className="text-muted-foreground">স্যান্ডবক্স স্থিতিশীলতা</span>
                   <div className="flex items-center gap-2">
                     {statusIcons[core.sandboxStability.code as keyof typeof statusIcons]}
                     <span className="font-semibold">{core.sandboxStability.status}</span>
@@ -81,7 +81,7 @@ export default function ReadinessPage() {
               </div>
               <Separator />
               <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Critical Open Issues</span>
+                  <span className="text-muted-foreground">গুরুতর খোলা সমস্যা</span>
                   <span className={`font-bold text-lg ${core.criticalIssues > 0 ? 'text-destructive' : 'text-chart-2'}`}>{core.criticalIssues}</span>
               </div>
           </CardContent>
@@ -90,16 +90,16 @@ export default function ReadinessPage() {
         <Card>
           <CardHeader className="flex-row items-center gap-4 space-y-0">
             <PieChart className="w-8 h-8 text-primary" />
-            <CardTitle>Analysis & Governance</CardTitle>
+            <CardTitle>বিশ্লেষণ ও প্রশাসন</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-md">
               <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Failure Analysis</span>
+                  <span className="text-muted-foreground">ব্যর্থতা বিশ্লেষণ</span>
                   {renderStatus(core.failureAnalysis.status)}
               </div>
               <Separator />
               <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Governance & Audit</span>
+                  <span className="text-muted-foreground">প্রশাসন ও নিরীক্ষা</span>
                   {renderStatus(core.governance.status)}
               </div>
           </CardContent>
@@ -109,16 +109,16 @@ export default function ReadinessPage() {
        <Card className="mt-8">
         <CardHeader className="flex-row items-center gap-4 space-y-0">
           <DatabaseZap className="w-8 h-8 text-primary" />
-          <CardTitle>Environment Control</CardTitle>
+          <CardTitle>পরিবেশ নিয়ন্ত্রণ</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 text-md">
             <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Current Environment</span>
+                <span className="text-muted-foreground">বর্তমান পরিবেশ</span>
                 <span className="font-mono font-bold text-lg rounded-md bg-accent/20 text-accent-foreground px-2 py-1">{environment.current}</span>
             </div>
             <Separator />
             <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Data Segregation</span>
+                <span className="text-muted-foreground">ডেটা পৃথকীকরণ</span>
                 {renderStatus(environment.dataSegregation.status)}
             </div>
         </CardContent>
@@ -126,7 +126,7 @@ export default function ReadinessPage() {
 
       <div className="flex justify-center mt-8">
         <Button size="lg" disabled={!isReady}>
-            Request LIVE Promotion
+            লাইভ প্রোমোশনের জন্য অনুরোধ করুন
         </Button>
       </div>
     </>

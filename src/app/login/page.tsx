@@ -53,7 +53,7 @@ export default function LoginPage() {
       return;
     }
     if (!phoneNumber || !/^\+?[1-9]\d{1,14}$/.test(phoneNumber)) {
-      setError('Please enter a valid phone number with country code.');
+      setError('অনুগ্রহ করে দেশের কোড সহ একটি বৈধ ফোন নম্বর লিখুন।');
       return;
     }
 
@@ -71,15 +71,15 @@ export default function LoginPage() {
       const result = await signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifierRef.current);
       setConfirmationResult(result);
       toast({
-        title: 'OTP Sent',
-        description: `An OTP has been sent to ${phoneNumber}.`,
+        title: 'ওটিপি পাঠানো হয়েছে',
+        description: `${phoneNumber}-এ একটি ওটিপি পাঠানো হয়েছে।`,
       });
     } catch (e: any) {
-      setError(e.message || 'Failed to send OTP.');
+      setError(e.message || 'ওটিপি পাঠাতে ব্যর্থ।');
       toast({
         variant: 'destructive',
-        title: 'Failed to Send OTP',
-        description: e.message || 'Please try again.',
+        title: 'ওটিপি পাঠাতে ব্যর্থ',
+        description: e.message || 'অনুগ্রহ করে আবার চেষ্টা করুন।',
       });
       if (recaptchaVerifierRef.current) {
         // @ts-ignore
@@ -94,11 +94,11 @@ export default function LoginPage() {
   const handleVerifyOtp = async () => {
     setError(null);
     if (!otp || otp.length !== 6) {
-      setError('Please enter a valid 6-digit OTP.');
+      setError('অনুগ্রহ করে একটি বৈধ ৬-সংখ্যার ওটিপি লিখুন।');
       return;
     }
     if (!confirmationResult) {
-      setError('Please request an OTP first.');
+      setError('অনুগ্রহ করে প্রথমে একটি ওটিপি অনুরোধ করুন।');
       return;
     }
 
@@ -113,16 +113,16 @@ export default function LoginPage() {
       }
 
       toast({
-        title: 'Login Successful',
-        description: 'You are now logged in.',
+        title: 'লগইন সফল হয়েছে',
+        description: 'আপনি এখন লগইন করেছেন।',
       });
       router.push('/dashboard');
     } catch (e: any) {
-      setError(e.message || 'Failed to verify OTP.');
+      setError(e.message || 'ওটিপি যাচাই করতে ব্যর্থ।');
       toast({
         variant: 'destructive',
-        title: 'Verification Failed',
-        description: e.message || 'The OTP is incorrect. Please try again.',
+        title: 'যাচাইকরণ ব্যর্থ হয়েছে',
+        description: e.message || 'ওটিপি ভুল। অনুগ্রহ করে আবার চেষ্টা করুন।',
       });
     } finally {
       setIsVerifyingOtp(false);
@@ -147,16 +147,16 @@ export default function LoginPage() {
                   <Phone className="h-8 w-8 text-primary" />
                 </div>
                 <CardTitle className="font-headline text-3xl">
-                  TestPay Pilot Access
+                  টেস্ট-পে পাইলট অ্যাক্সেস
                 </CardTitle>
                 <CardDescription>
-                  Enter your phone number to receive a login code.
+                  লগইন কোড পেতে আপনার ফোন নম্বর লিখুন।
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {error && (
                   <Alert variant="destructive">
-                    <AlertTitle>Error</AlertTitle>
+                    <AlertTitle>ত্রুটি</AlertTitle>
                     <AlertDescription>{error}</AlertDescription>
                   </Alert>
                 )}
@@ -165,7 +165,7 @@ export default function LoginPage() {
                     <div className="space-y-4">
                         <Input
                             type="tel"
-                            placeholder="+8801712345678"
+                            placeholder="+৮৮০১৭..."
                             value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
                             disabled={isSendingOtp}
@@ -180,14 +180,14 @@ export default function LoginPage() {
                             ) : (
                             <ArrowRight className="mr-2 h-4 w-4" />
                             )}
-                            Send OTP
+                            ওটিপি পাঠান
                         </Button>
                     </div>
                 ) : (
                     <div className="space-y-4">
                         <Input
                             type="text"
-                            placeholder="Enter 6-digit OTP"
+                            placeholder="৬-সংখ্যার ওটিপি লিখুন"
                             value={otp}
                             onChange={(e) => setOtp(e.target.value)}
                             disabled={isVerifyingOtp}
@@ -202,14 +202,14 @@ export default function LoginPage() {
                             ) : (
                             <ArrowRight className="mr-2 h-4 w-4" />
                             )}
-                            Verify & Login
+                            যাচাই করে লগইন করুন
                         </Button>
                          <Button variant="link" onClick={() => {
                              setConfirmationResult(null);
                              setPhoneNumber('');
                              setOtp('');
                              }}>
-                            Use a different phone number
+                            অন্য ফোন নম্বর ব্যবহার করুন
                         </Button>
                     </div>
                 )}
@@ -218,8 +218,8 @@ export default function LoginPage() {
             </Card>
             <footer className="mt-8 text-center text-sm text-muted-foreground">
               <p>
-                &copy; {new Date().getFullYear()} TestPay Pilot. For
-                demonstration purposes only.
+                &copy; {new Date().getFullYear()} টেস্ট-পে পাইলট। শুধুমাত্র
+                প্রদর্শনের উদ্দেশ্যে।
               </p>
             </footer>
         </div>

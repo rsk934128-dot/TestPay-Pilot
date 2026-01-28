@@ -26,13 +26,13 @@ import type { CardType } from '@/lib/definitions'
 
 const FormSchema = z.object({
   cardNumber: z.string().refine((val) => /^\d{13,19}$/.test(val.replace(/\s/g, '')), {
-    message: 'Card number must be between 13 and 19 digits.',
+    message: 'কার্ড নম্বর অবশ্যই ১৩ থেকে ১৯ সংখ্যার মধ্যে হতে হবে।',
   }),
   expiryDate: z.string().refine((val) => /^(0[1-9]|1[0-2])\s*\/\s*(\d{2})$/.test(val), {
-    message: 'Must be in MM / YY format.',
+    message: 'অবশ্যই MM / YY ফরম্যাটে হতে হবে।',
   }),
   cvv: z.string().refine((val) => /^\d{3,4}$/.test(val), {
-    message: 'CVV must be 3 or 4 digits.',
+    message: 'CVV অবশ্যই ৩ বা ৪ সংখ্যার হতে হবে।',
   }),
   amount: z.string(),
   customAmount: z.string().optional(),
@@ -80,22 +80,21 @@ export function PaymentForm() {
     if (state.message && state.errors) {
       toast({
         variant: "destructive",
-        title: "Payment Failed",
+        title: "পেমেন্ট ব্যর্থ হয়েছে",
         description: state.message,
       })
     }
   }, [state, toast])
 
   const onSubmit = (data: FormValues) => {
-    const finalAmount = data.amount === 'custom' ? data.customAmount : data.amount
-    const formData = new FormData()
-    formData.append('cardNumber', data.cardNumber.replace(/\s/g, ''))
-    formData.append('expiryDate', data.expiryDate.replace(/\s/g, ''))
-    formData.append('cvv', data.cvv)
-    formData.append('amount', finalAmount || '0')
-    formData.append('cardType', getCardType(data.cardNumber.replace(/\s/g, '')))
-
     startTransition(() => {
+      const finalAmount = data.amount === 'custom' ? data.customAmount : data.amount
+      const formData = new FormData()
+      formData.append('cardNumber', data.cardNumber.replace(/\s/g, ''))
+      formData.append('expiryDate', data.expiryDate.replace(/\s/g, ''))
+      formData.append('cvv', data.cvv)
+      formData.append('amount', finalAmount || '0')
+      formData.append('cardType', getCardType(data.cardNumber.replace(/\s/g, '')))
       formAction(formData)
     })
   }
@@ -111,7 +110,7 @@ export function PaymentForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-2">
-            <FormLabel>Card Presets</FormLabel>
+            <FormLabel>কার্ড প্রিসেট</FormLabel>
             <div className="flex flex-wrap gap-2">
                 {presets.map(p => (
                     <Button
@@ -136,7 +135,7 @@ export function PaymentForm() {
           name="cardNumber"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Card Number</FormLabel>
+              <FormLabel>কার্ড নম্বর</FormLabel>
               <div className="relative">
                 <FormControl>
                   <Input placeholder="0000 0000 0000 0000" {...field} />
@@ -155,7 +154,7 @@ export function PaymentForm() {
             name="expiryDate"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Expiry Date</FormLabel>
+                <FormLabel>মেয়াদ শেষ হওয়ার তারিখ</FormLabel>
                 <FormControl>
                   <Input placeholder="MM / YY" {...field} />
                 </FormControl>
@@ -182,7 +181,7 @@ export function PaymentForm() {
           name="amount"
           render={({ field }) => (
             <FormItem className="space-y-3">
-              <FormLabel>Amount</FormLabel>
+              <FormLabel>পরিমাণ</FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
@@ -201,7 +200,7 @@ export function PaymentForm() {
                     <FormControl>
                       <RadioGroupItem value="custom" />
                     </FormControl>
-                    <FormLabel className="font-normal">Custom</FormLabel>
+                    <FormLabel className="font-normal">অন্যান্য</FormLabel>
                   </FormItem>
                 </RadioGroup>
               </FormControl>
@@ -216,9 +215,9 @@ export function PaymentForm() {
             name="customAmount"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Custom Amount (৳)</FormLabel>
+                <FormLabel>অন্যান্য পরিমাণ (৳)</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="Enter amount" {...field} />
+                  <Input type="number" placeholder="পরিমাণ লিখুন" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -230,7 +229,7 @@ export function PaymentForm() {
           {isPending ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
-            'Run Test Payment'
+            'টেস্ট পেমেন্ট চালান'
           )}
           {!isPending && <ArrowRight className="ml-2 h-4 w-4" />}
         </Button>

@@ -19,57 +19,57 @@ const ChecklistItem = ({ children, id }: { children: React.ReactNode; id: string
 export default function PromotionChecklistPage() {
 
     const sections = {
-        "1. Environment & Credentials": [
-            "Current environment confirmed as STAGING.",
-            "LIVE environment access is locked and restricted to authorized personnel.",
-            "No test/sandbox credentials or keys (e.g., ShurjoPay) are configured in LIVE.",
-            "Configuration for LIVE has been validated and peer-reviewed.",
+        "১. পরিবেশ ও ক্রেডেনশিয়াল": [
+            "বর্তমান পরিবেশ স্টেজিং হিসাবে নিশ্চিত করা হয়েছে।",
+            "লাইভ পরিবেশের অ্যাক্সেস লক করা এবং অনুমোদিত কর্মীদের মধ্যে সীমাবদ্ধ।",
+            "লাইভ পরিবেশে কোনো টেস্ট/স্যান্ডবক্স ক্রেডেনশিয়াল বা কী (যেমন, সুরজোপে) কনফিগার করা নেই।",
+            "লাইভের জন্য কনফিগারেশন যাচাই করা হয়েছে এবং পিয়ার-রিভিউ করা হয়েছে।",
         ],
-        "2. Pre-Launch Checks": [
-            "Staging/Sandbox stability and performance tests passed.",
-            "Legal and compliance checks for the LIVE environment are complete.",
-            "A documented rollback mechanism has been verified and is ready.",
-            "The environment switch mechanism is confirmed to be ready for activation.",
+        "২. প্রি-লঞ্চ চেকিং": [
+            "স্টেজিং/স্যান্ডবক্স স্থিতিশীলতা এবং পারফরম্যান্স পরীক্ষা পাস হয়েছে।",
+            "লাইভ পরিবেশের জন্য আইনি এবং সম্মতি পরীক্ষা সম্পন্ন হয়েছে।",
+            "একটি নথিভুক্ত রোলব্যাক প্রক্রিয়া যাচাই করা হয়েছে এবং প্রস্তুত রয়েছে।",
+            "পরিবেশ সুইচ প্রক্রিয়া সক্রিয় করার জন্য প্রস্তুত হিসাবে নিশ্চিত করা হয়েছে।",
         ],
-        "3. Launch Readiness & Testing": [
-            "Stability & Performance: Minimum required test volume completed in STAGING.",
-            "Failure Analysis: All failure types from STAGING have been reviewed and categorized.",
-            "Failure Rate: The observed failure rate is within the approved threshold.",
-            "Resolution: Root causes for all critical failures are identified, and fixes are verified.",
-            "No unresolved critical or unexplained errors remain.",
+        "৩. লঞ্চ প্রস্তুতি ও টেস্টিং": [
+            "স্থিতিশীলতা ও পারফরম্যান্স: স্টেজিং-এ ন্যূনতম প্রয়োজনীয় টেস্ট ভলিউম সম্পন্ন হয়েছে।",
+            "ব্যর্থতা বিশ্লেষণ: স্টেজিং থেকে সমস্ত ব্যর্থতার ধরন পর্যালোচনা এবং শ্রেণিবদ্ধ করা হয়েছে।",
+            "ব্যর্থতার হার: পর্যবেক্ষণ করা ব্যর্থতার হার অনুমোদিত থ্রেশহোল্ডের মধ্যে রয়েছে।",
+            "সমাধান: সমস্ত গুরুতর ব্যর্থতার মূল কারণ চিহ্নিত করা হয়েছে এবং সমাধান যাচাই করা হয়েছে।",
+            "কোনো অমীমাংসিত গুরুতর বা ব্যাখ্যাতীত ত্রুটি নেই।",
         ],
-        "4. Safety & Governance": [
-            "Audit logging is enabled and verified for all critical actions in LIVE.",
-            "Role-Based Access Control (RBAC) is enforced for the LIVE environment.",
-            "Destructive actions (e.g., data reset) are protected with multi-factor confirmation.",
+        "৪. নিরাপত্তা ও প্রশাসন": [
+            "লাইভের সমস্ত গুরুতর কাজের জন্য অডিট লগিং সক্রিয় এবং যাচাই করা হয়েছে।",
+            "লাইভ পরিবেশের জন্য ভূমিকা-ভিত্তিক অ্যাক্সেস কন্ট্রোল (RBAC) প্রয়োগ করা হয়েছে।",
+            "ধ্বংসাত্মক কাজগুলো (যেমন, ডেটা রিসেট) মাল্টি-ফ্যাক্টর কনফার্মেশন দ্বারা সুরক্ষিত।",
         ],
-        "5. Post-Launch Readiness": [
-            "Executive summary reports for the STAGING phase have been generated.",
-            "All reports have been reviewed by stakeholders and sensitive data is redacted.",
-            "Risk level for LIVE promotion is assessed as LOW / ACCEPTABLE.",
-            "There are no open incidents or unresolved investigations from the STAGING phase.",
+        "৫. পোস্ট-লঞ্চ প্রস্তুতি": [
+            "স্টেজিং পর্বের জন্য এক্সিকিউটিভ সারাংশ রিপোর্ট তৈরি করা হয়েছে।",
+            "সমস্ত রিপোর্ট স্টেকহোল্ডারদের দ্বারা পর্যালোচনা করা হয়েছে এবং সংবেদনশীল ডেটা সংশোধন করা হয়েছে।",
+            "লাইভ প্রোমোশনের জন্য ঝুঁকির স্তর কম/গ্রহণযোগ্য হিসাবে মূল্যায়ন করা হয়েছে।",
+            "স্টেজিং পর্ব থেকে কোনো খোলা ঘটনা বা অমীমাংসিত তদন্ত নেই।",
         ],
-        "6. Final Decision": [
-            "Launch Readiness Indicator = 🟢 READY",
-            "System is recommended for safe promotion to LIVE.",
+        "৬. চূড়ান্ত সিদ্ধান্ত": [
+            "লঞ্চ প্রস্তুতি সূচক = 🟢 প্রস্তুত",
+            "সিস্টেমটি লাইভে নিরাপদ প্রচারের জন্য সুপারিশ করা হয়েছে।",
         ],
     }
 
     const approvalRoles = [
-        "Product Owner",
-        "Tech Lead",
-        "QA / Risk",
-        "Bank / Gateway (if required)",
+        "প্রোডাক্ট ওনার",
+        "টেক লিড",
+        "কিউএ / রিস্ক",
+        "ব্যাংক / গেটওয়ে (যদি প্রয়োজন হয়)",
     ]
 
     return (
         <div className="w-full max-w-4xl mx-auto space-y-8 pb-12">
             <div className="text-center space-y-2">
                 <h1 className="font-headline text-3xl font-semibold">
-                    Sandbox → Live ENV Switch Checklist
+                    স্যান্ডবক্স → লাইভ পরিবেশ সুইচ চেকলিস্ট
                 </h1>
                 <p className="text-muted-foreground">
-                    Formal approval checklist for promoting the payment system to a real-like testing environment.
+                    পেমেন্ট সিস্টেমকে একটি বাস্তব-সদৃশ টেস্টিং পরিবেশে প্রচারের জন্য আনুষ্ঠানিক অনুমোদন চেকলিস্ট।
                 </p>
             </div>
 
@@ -90,17 +90,17 @@ export default function PromotionChecklistPage() {
 
             <Card>
                 <CardHeader>
-                    <CardTitle className="text-lg">Final Approval Sign-off</CardTitle>
+                    <CardTitle className="text-lg">চূড়ান্ত অনুমোদন সাইন-অফ</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="overflow-x-auto">
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="w-[200px]">Role</TableHead>
-                                    <TableHead>Name</TableHead>
-                                    <TableHead>Signature</TableHead>
-                                    <TableHead className="text-right w-[150px]">Date</TableHead>
+                                    <TableHead className="w-[200px]">ভূমিকা</TableHead>
+                                    <TableHead>নাম</TableHead>
+                                    <TableHead>স্বাক্ষর</TableHead>
+                                    <TableHead className="text-right w-[150px]">তারিখ</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -120,17 +120,17 @@ export default function PromotionChecklistPage() {
 
             <Card className="border-primary/50 bg-primary/10">
                 <CardHeader>
-                    <CardTitle className="text-base text-primary-foreground/90 font-bold">Final Declaration</CardTitle>
+                    <CardTitle className="text-base text-primary-foreground/90 font-bold">চূড়ান্ত ঘোষণা</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <p className="text-sm font-semibold text-primary-foreground">
-                        All checks above have been completed and verified. The system is approved for promotion from STAGING to LIVE.
+                        উপরের সমস্ত চেক সম্পন্ন এবং যাচাই করা হয়েছে। সিস্টেমটি স্টেজিং থেকে লাইভে প্রচারের জন্য অনুমোদিত।
                     </p>
                 </CardContent>
             </Card>
             
             <div className="text-center text-xs text-muted-foreground pt-4">
-                <p>Document Status: Official Launch Approval Record</p>
+                <p>নথির স্থিতি: অফিসিয়াল লঞ্চ অনুমোদন রেকর্ড</p>
             </div>
         </div>
     )

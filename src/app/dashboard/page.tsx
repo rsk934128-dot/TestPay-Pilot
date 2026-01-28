@@ -44,13 +44,13 @@ export default function DashboardPage() {
         <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm" >
           <div className="flex flex-col items-center gap-1 text-center">
             <h3 className="text-2xl font-bold tracking-tight font-headline">
-              No transactions yet
+              এখনও কোনো লেনদেন হয়নি
             </h3>
             <p className="text-sm text-muted-foreground">
-              Make your first test payment to see your dashboard.
+              আপনার ড্যাশবোর্ড দেখতে আপনার প্রথম পরীক্ষা পেমেন্ট করুন।
             </p>
             <Button className="mt-4 bg-accent text-accent-foreground hover:bg-accent/90" asChild>
-              <Link href="/dashboard/payment">New Payment</Link>
+              <Link href="/dashboard/payment">নতুন পেমেন্ট</Link>
             </Button>
           </div>
         </div>
@@ -62,47 +62,47 @@ export default function DashboardPage() {
     <>
       <div className="flex items-center">
         <h1 className="font-headline text-lg font-semibold md:text-2xl">
-          Dashboard
+          ড্যাশবোর্ড
         </h1>
       </div>
       <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Test Transactions
+              মোট টেস্ট লেনদেন
             </CardTitle>
             <CircleDollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.total}</div>
             <p className="text-xs text-muted-foreground">
-              Across all test cards
+              সমস্ত টেস্ট কার্ড জুড়ে
             </p>
           </CardContent>
         </Card>
         <Card className="border-chart-2/50 bg-chart-2/10">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-chart-2">
-              Successful Payments
+              সফল পেমেন্ট
             </CardTitle>
             <CheckCircle2 className="h-4 w-4 text-chart-2" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-chart-2">{stats.success}</div>
             <p className="text-xs text-chart-2/80">
-              {stats.total > 0 ? `${((stats.success / stats.total) * 100).toFixed(0)}% success rate` : 'No transactions yet'}
+              {stats.total > 0 ? `${((stats.success / stats.total) * 100).toFixed(0)}% সফলতার হার` : 'এখনও কোনো লেনদেন হয়নি'}
             </p>
           </CardContent>
         </Card>
         <Card className="border-destructive/50 bg-destructive/10">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-destructive">Failed Payments</CardTitle>
+            <CardTitle className="text-sm font-medium text-destructive">ব্যর্থ পেমেন্ট</CardTitle>
             <XCircle className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-destructive">{stats.failed}</div>
              <p className="text-xs text-destructive/80">
-              {stats.total > 0 ? `${((stats.failed / stats.total) * 100).toFixed(0)}% failure rate` : 'No transactions yet'}
+              {stats.total > 0 ? `${((stats.failed / stats.total) * 100).toFixed(0)}% ব্যর্থতার হার` : 'এখনও কোনো লেনদেন হয়নি'}
             </p>
           </CardContent>
         </Card>
@@ -111,14 +111,14 @@ export default function DashboardPage() {
         <Card className="lg:col-span-4">
           <CardHeader className="flex flex-row items-center">
             <div className="grid gap-2">
-              <CardTitle>Recent Transactions</CardTitle>
+              <CardTitle>সাম্প্রতিক লেনদেন</CardTitle>
               <CardDescription>
-                The last 5 test payments made.
+                শেষ ৫টি টেস্ট পেমেন্ট।
               </CardDescription>
             </div>
             <Button asChild size="sm" className="ml-auto gap-1">
               <Link href="/dashboard/history">
-                View All
+                সব দেখুন
                 <ArrowUpRight className="h-4 w-4" />
               </Link>
             </Button>
@@ -127,10 +127,10 @@ export default function DashboardPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Card</TableHead>
-                  <TableHead className="text-center">Status</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
-                  <TableHead className="text-right">Date</TableHead>
+                  <TableHead>কার্ড</TableHead>
+                  <TableHead className="text-center">স্ট্যাটাস</TableHead>
+                  <TableHead className="text-right">পরিমাণ</TableHead>
+                  <TableHead className="text-right">তারিখ</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -153,7 +153,7 @@ export default function DashboardPage() {
                       </TableCell>
                       <TableCell className="text-center">
                         <Badge variant="outline" className={tx.status === 'Success' ? 'border-chart-2/60 bg-chart-2/10 text-chart-2' : 'border-destructive/60 bg-destructive/10 text-destructive'}>
-                          {tx.status}
+                          {tx.status === 'Success' ? 'সফল' : 'ব্যর্থ'}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">{formatCurrency(tx.amount)}</TableCell>
@@ -172,10 +172,10 @@ export default function DashboardPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <AlertCircle className="h-5 w-5 text-destructive" />
-                  Top Failure Reasons
+                  শীর্ষ ব্যর্থতার কারণ
                 </CardTitle>
                 <CardDescription>
-                  Most common errors in your test transactions.
+                  আপনার টেস্ট লেনদেনের সবচেয়ে সাধারণ ত্রুটি।
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -183,7 +183,7 @@ export default function DashboardPage() {
                   {stats.topFailureReasons.map(({ reason, count }) => (
                     <li key={reason} className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">{reason}</span>
-                      <span className="font-semibold">{count} {count > 1 ? 'times' : 'time'}</span>
+                      <span className="font-semibold">{count} {count > 1 ? 'বার' : 'বার'}</span>
                     </li>
                   ))}
                 </ul>

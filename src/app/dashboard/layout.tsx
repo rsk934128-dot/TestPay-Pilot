@@ -41,13 +41,13 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 
 
 const navItems = [
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { href: '/dashboard/payment', icon: CreditCard, label: 'New Payment' },
-  { href: '/dashboard/history', icon: History, label: 'History' },
-  { href: '/dashboard/readiness', icon: ShieldCheck, label: 'System Readiness' },
-  { href: '/dashboard/checklist', icon: ClipboardCheck, label: 'Promotion Checklist' },
-  { href: '/dashboard/pitch', icon: Mic, label: 'Pitch Guide' },
-  { href: '/dashboard/deck', icon: Projector, label: 'Executive Deck' },
+  { href: '/dashboard', icon: LayoutDashboard, label: 'ড্যাশবোর্ড' },
+  { href: '/dashboard/payment', icon: CreditCard, label: 'নতুন পেমেন্ট' },
+  { href: '/dashboard/history', icon: History, label: 'ইতিহাস' },
+  { href: '/dashboard/readiness', icon: ShieldCheck, label: 'সিস্টেম প্রস্তুতি' },
+  { href: '/dashboard/checklist', icon: ClipboardCheck, label: 'প্রোমোশন চেকলিস্ট' },
+  { href: '/dashboard/pitch', icon: Mic, label: 'পিচ গাইড' },
+  { href: '/dashboard/deck', icon: Projector, label: 'এক্সিকিউটিভ ডেক' },
 ]
 
 export default function DashboardLayout({
@@ -91,13 +91,13 @@ export default function DashboardLayout({
               className="flex items-center gap-2 font-semibold font-headline"
             >
               <Icons.logo />
-              <span className="">TestPay</span>
+              <span className="">টেস্ট-পে</span>
             </Link>
             <Badge
               variant="outline"
               className="ml-auto border-orange-500 text-orange-500"
             >
-              STAGING
+              স্টেজিং
             </Badge>
           </div>
           <div className="flex-1">
@@ -137,7 +137,7 @@ export default function DashboardLayout({
                   {user.phoneNumber}
                 </p>
                 <p className="text-xs text-muted-foreground truncate">
-                  Authenticated User
+                  প্রমাণিত ব্যবহারকারী
                 </p>
               </div>
               <DropdownMenu>
@@ -147,11 +147,11 @@ export default function DashboardLayout({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuLabel>আমার অ্যাকাউন্ট</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
                     <Settings className="mr-2 h-4 w-4" />
-                    <span>Settings</span>
+                    <span>সেটিংস</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <ResetDataDialog>
@@ -160,13 +160,13 @@ export default function DashboardLayout({
                       className="text-destructive focus:bg-destructive/10 focus:text-destructive"
                     >
                       <Trash2 className="mr-2 h-4 w-4" />
-                      <span>Reset Pilot Data</span>
+                      <span>পাইলট ডেটা রিসেট</span>
                     </DropdownMenuItem>
                   </ResetDataDialog>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
+                    <span>লগ আউট</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -180,7 +180,7 @@ export default function DashboardLayout({
             <SheetTrigger asChild>
               <Button size="icon" variant="outline">
                 <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle navigation menu</span>
+                <span className="sr-only">নেভিগেশন মেনু টগল করুন</span>
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col">
@@ -190,12 +190,12 @@ export default function DashboardLayout({
                   className="flex items-center gap-2 mb-4 text-lg font-semibold font-headline"
                 >
                   <Icons.logo />
-                  <span>TestPay</span>
+                  <span>টেস্ট-পে</span>
                    <Badge
                       variant="outline"
                       className="ml-auto border-orange-500 text-orange-500"
                     >
-                      STAGING
+                      স্টেজিং
                     </Badge>
                 </Link>
                 {navItems.map(({ href, icon: Icon, label }) => {
@@ -228,7 +228,7 @@ export default function DashboardLayout({
                         {user.phoneNumber}
                       </p>
                       <p className="text-xs text-muted-foreground truncate">
-                        Authenticated User
+                        প্রমাণিত ব্যবহারকারী
                       </p>
                     </div>
                     <DropdownMenu>
@@ -238,11 +238,11 @@ export default function DashboardLayout({
                         </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuLabel>আমার অ্যাকাউন্ট</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>
                             <Settings className="mr-2 h-4 w-4" />
-                            <span>Settings</span>
+                            <span>সেটিংস</span>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <ResetDataDialog>
@@ -251,13 +251,13 @@ export default function DashboardLayout({
                             className="text-destructive focus:bg-destructive/10 focus:text-destructive"
                             >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            <span>Reset Pilot Data</span>
+                            <span>পাইলট ডেটা রিসেট</span>
                             </DropdownMenuItem>
                         </ResetDataDialog>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={handleLogout}>
                             <LogOut className="mr-2 h-4 w-4" />
-                            <span>Log out</span>
+                            <span>লগ আউট</span>
                         </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -267,7 +267,7 @@ export default function DashboardLayout({
           </Sheet>
           <div className='flex-1'>
             <h1 className='font-headline font-semibold text-lg'>
-                 {navItems.find(item => item.href === pathname)?.label || 'Dashboard'}
+                 {navItems.find(item => item.href === pathname)?.label || 'ড্যাশবোর্ড'}
             </h1>
           </div>
         </header>
@@ -275,17 +275,16 @@ export default function DashboardLayout({
           <Alert className="border-yellow-200 bg-yellow-50/50 text-yellow-900 [&>svg]:text-yellow-500">
             <AlertTriangle className="h-4 w-4" />
             <AlertTitle className="font-semibold">
-              You are in STAGING MODE.
+              আপনি স্টেজিং মোডে আছেন।
             </AlertTitle>
             <AlertDescription>
-              No real money will be charged. This is a pilot testing
-              environment.
+              কোনো আসল টাকা চার্জ করা হবে না। এটি একটি পাইলট টেস্টিং পরিবেশ।
             </AlertDescription>
           </Alert>
           {children}
         </main>
         <footer className="p-6 pt-0 text-center text-sm text-muted-foreground">
-          <p>Sandbox testing only. No real card data processed.</p>
+          <p>শুধুমাত্র স্যান্ডবক্স টেস্টিং। কোনো বাস্তব কার্ড ডেটা প্রক্রিয়া করা হয় না।</p>
         </footer>
       </div>
     </div>

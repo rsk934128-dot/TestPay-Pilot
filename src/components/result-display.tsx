@@ -78,9 +78,9 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
         setInterpretationMeta(prev => ({ version: isLocked ? prev.version : prev.version + 1, timestamp: new Date() }));
     } else {
         setInterpretation({
-            interpretation: "Could not get an interpretation at this time. The AI model may be offline or an error occurred.",
+            interpretation: "এই মুহূর্তে একটি ব্যাখ্যা পাওয়া যায়নি। এআই মডেল অফলাইন হতে পারে বা একটি ত্রুটি ঘটেছে।",
             confidence: 'Low',
-            explanationBasis: 'An error occurred while contacting the AI service.'
+            explanationBasis: 'এআই পরিষেবার সাথে যোগাযোগ করার সময় একটি ত্রুটি ঘটেছে।'
         });
     }
     setIsLoading(false)
@@ -96,7 +96,7 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
 
   const handleLockExplanation = () => {
       setIsLocked(true);
-      setReviewedBy("Admin");
+      setReviewedBy("অ্যাডমিন");
   };
 
   const confidenceColor = {
@@ -112,12 +112,12 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
           <AccordionTrigger>
             <div className="flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-accent" />
-              <span>AI-Powered Code Interpretation</span>
+              <span>AI-চালিত কোড ব্যাখ্যা</span>
             </div>
           </AccordionTrigger>
           <AccordionContent className="space-y-4 pt-4">
             <p className="text-sm text-muted-foreground">
-              Use our AI tool to get a human-readable explanation of the gateway response code and message.
+              গেটওয়ে প্রতিক্রিয়া কোড এবং বার্তার একটি মানুষের পাঠযোগ্য ব্যাখ্যা পেতে আমাদের AI টুল ব্যবহার করুন।
             </p>
             <Button
               onClick={handleInterpret}
@@ -127,9 +127,9 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Interpreting...
+                  ব্যাখ্যা করা হচ্ছে...
                 </>
-              ) : isLocked ? 'Explanation Locked' : 'Interpret Response'}
+              ) : isLocked ? 'ব্যাখ্যা লক করা হয়েছে' : 'প্রতিক্রিয়া ব্যাখ্যা করুন'}
             </Button>
             {isLoading && (
               <div className="mt-4 space-y-4 rounded-lg border bg-secondary/50 p-4">
@@ -151,13 +151,13 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
                <div className="mt-4 space-y-4 rounded-lg border bg-secondary/30 p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-muted-foreground">AI Confidence:</span>
+                      <span className="text-xs font-semibold text-muted-foreground">AI আত্মবিশ্বাস:</span>
                       <Badge variant="outline" className={confidenceColor}>{interpretation.confidence}</Badge>
                     </div>
                      {isLocked && reviewedBy && (
                         <Badge variant="secondary" className="border-green-600 bg-green-100 text-green-800">
                            <CheckCircle className="mr-1 h-3 w-3" />
-                           Reviewed by {reviewedBy}
+                           পর্যালোচনা করেছেন {reviewedBy}
                         </Badge>
                       )}
                   </div>
@@ -173,21 +173,21 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
                         <AccordionTrigger className="py-2 text-xs text-muted-foreground hover:no-underline hover:text-primary">
                             <div className="flex items-center gap-1">
                                 <Info className="h-3 w-3" />
-                                Why this explanation?
+                                এই ব্যাখ্যা কেন?
                             </div>
                         </AccordionTrigger>
                         <AccordionContent className="pt-2 text-xs text-muted-foreground space-y-2">
-                            <p><span className="font-semibold">Basis:</span> {interpretation.explanationBasis}</p>
-                            <p><span className="font-semibold">Model:</span> Gemini</p>
+                            <p><span className="font-semibold">ভিত্তি:</span> {interpretation.explanationBasis}</p>
+                            <p><span className="font-semibold">মডেল:</span> Gemini</p>
                             {interpretationMeta.timestamp && (
-                              <p><span className="font-semibold">Last Updated:</span> {format(interpretationMeta.timestamp, "dd MMM yyyy, HH:mm")}</p>
+                              <p><span className="font-semibold">সর্বশেষ আপডেট:</span> {format(interpretationMeta.timestamp, "dd MMM yyyy, HH:mm")}</p>
                             )}
-                            <p><span className="font-semibold">Explanation Version:</span> v{interpretationMeta.version}.0</p>
+                            <p><span className="font-semibold">ব্যাখ্যা সংস্করণ:</span> v{interpretationMeta.version}.0</p>
                             <div className="flex items-center gap-2">
-                            <span className="font-semibold">Reviewed:</span>
+                            <span className="font-semibold">পর্যালোচনা করেছেন:</span>
                              {isLocked ? 
                                 <Badge variant="secondary" className="bg-green-100 text-green-800">{reviewedBy}</Badge> : 
-                                <Badge variant="secondary">Not Yet</Badge>
+                                <Badge variant="secondary">এখনও হয়নি</Badge>
                              }
                             </div>
                         </AccordionContent>
@@ -197,7 +197,7 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
                  <Separator />
 
                  <div className="flex items-center justify-between pt-2">
-                    <span className="text-xs text-muted-foreground">Was this helpful?</span>
+                    <span className="text-xs text-muted-foreground">এটি কি সহায়ক ছিল?</span>
                     <div className="flex gap-1">
                         <TooltipProvider>
                             <Tooltip>
@@ -207,7 +207,7 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>Helpful</p>
+                                    <p>সহায়ক</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
@@ -219,7 +219,7 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>Not Helpful</p>
+                                    <p>সহায়ক নয়</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
@@ -229,7 +229,7 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
                  <Separator />
 
                  <div className="flex items-center justify-between pt-2">
-                    <span className="text-xs font-semibold text-muted-foreground">Admin Actions</span>
+                    <span className="text-xs font-semibold text-muted-foreground">অ্যাডমিন অ্যাকশন</span>
                      <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
@@ -240,18 +240,18 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
                                   disabled={isLocked}
                                 >
                                   <Lock className="mr-2 h-4 w-4" />
-                                  {isLocked ? "Locked" : "Lock Explanation"}
+                                  {isLocked ? "লকড" : "ব্যাখ্যা লক করুন"}
                                 </Button>
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p>Lock to prevent changes and mark as reviewed.</p>
+                                <p>পরিবর্তন রোধ করতে এবং পর্যালোচিত হিসাবে চিহ্নিত করতে লক করুন।</p>
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
                  </div>
                  
                  <p className="pt-4 text-xs text-muted-foreground/80">
-                  * AI explanation is advisory. Test data auto-deleted in 14 days.
+                  * এআই ব্যাখ্যা পরামর্শমূলক। টেস্ট ডেটা ১৪ দিনের মধ্যে স্বয়ংক্রিয়ভাবে মুছে ফেলা হবে।
                 </p>
               </div>
             )}

@@ -12,16 +12,16 @@ export default function PaymentPage() {
     <>
       <div className="flex items-center">
         <h1 className="font-headline text-lg font-semibold md:text-2xl">
-          New Test Payment
+          নতুন টেস্ট পেমেন্ট
         </h1>
       </div>
       <div className="flex-1 rounded-xl bg-muted/30 p-4">
         <div className="mx-auto max-w-xl">
           <Card className="shadow-lg">
             <CardHeader>
-              <CardTitle>Card Test Payment</CardTitle>
+              <CardTitle>কার্ড টেস্ট পেমেন্ট</CardTitle>
               <CardDescription>
-                Use a dummy card to simulate a transaction. No real money will be charged.
+                একটি লেনদেন সিমুলেট করতে একটি ডামি কার্ড ব্যবহার করুন। কোনো আসল টাকা চার্জ করা হবে না।
               </CardDescription>
             </CardHeader>
             <CardContent>

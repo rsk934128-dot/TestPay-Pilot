@@ -55,7 +55,7 @@ export default function ResultPage() {
             <XCircle className="h-16 w-16 text-red-500" />
           )}
           <CardTitle className="font-headline text-3xl">
-            Payment {transaction.status}
+            পেমেন্ট {isSuccess ? 'সফল' : 'ব্যর্থ'}
           </CardTitle>
           <CardDescription className="text-lg">
             {formatCurrency(transaction.amount)}
@@ -64,7 +64,7 @@ export default function ResultPage() {
         <CardContent className="space-y-6">
           <div className="space-y-4 rounded-lg border bg-secondary/30 p-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Response Code</span>
+              <span className="text-sm text-muted-foreground">প্রতিক্রিয়া কোড</span>
               <div className="flex items-center gap-2">
                 <span className="font-mono text-sm font-semibold">{transaction.responseCode}</span>
                  <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleCopy('code', transaction.responseCode)}>
@@ -74,7 +74,7 @@ export default function ResultPage() {
             </div>
             <Separator />
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Gateway Message</span>
+              <span className="text-sm text-muted-foreground">গেটওয়ে বার্তা</span>
               <div className="flex items-center gap-2 text-right">
                 <span className="text-right font-semibold">{transaction.gatewayMessage}</span>
                  <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleCopy('msg', transaction.gatewayMessage)}>
@@ -85,11 +85,11 @@ export default function ResultPage() {
           </div>
           
           <div className="space-y-4">
-            <h3 className="font-semibold">Transaction Details</h3>
+            <h3 className="font-semibold">লেনদেনের বিবরণ</h3>
             <ul className="space-y-3 text-sm">
                <li className="flex items-center justify-between">
                   <span className="flex items-center gap-2 text-muted-foreground">
-                    <Hash className="h-4 w-4" /> Transaction ID
+                    <Hash className="h-4 w-4" /> লেনদেন আইডি
                   </span>
                   <div className="flex items-center gap-1">
                     <span className={'font-mono text-xs'}>{transaction.transactionId}</span>
@@ -100,15 +100,15 @@ export default function ResultPage() {
                 </li>
                 <li className="flex items-center justify-between">
                   <span className="flex items-center gap-2 text-muted-foreground">
-                    <Calendar className="h-4 w-4" /> Date & Time
+                    <Calendar className="h-4 w-4" /> তারিখ ও সময়
                   </span>
                    <span>{format(new Date(transaction.date), "dd MMM yyyy, HH:mm:ss")}</span>
                 </li>
                  <li className="flex items-center justify-between">
                   <span className="flex items-center gap-2 text-muted-foreground">
-                    <CreditCard className="h-4 w-4" /> Card Used
+                    <CreditCard className="h-4 w-4" /> ব্যবহৃত কার্ড
                   </span>
-                  <span>{`${transaction.cardType} ending in ${transaction.cardNumber.slice(-4)}`}</span>
+                  <span>{`${transaction.cardType} ****${transaction.cardNumber.slice(-4)}`}</span>
                 </li>
             </ul>
           </div>
@@ -117,10 +117,10 @@ export default function ResultPage() {
 
           <div className="flex items-center gap-4 pt-4">
             <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-              <Link href="/dashboard/payment">Make Another Payment</Link>
+              <Link href="/dashboard/payment">আরেকটি পেমেন্ট করুন</Link>
             </Button>
             <Button asChild variant="outline" className="w-full">
-               <Link href="/dashboard/history">View History</Link>
+               <Link href="/dashboard/history">ইতিহাস দেখুন</Link>
             </Button>
           </div>
         </CardContent>

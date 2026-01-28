@@ -14,7 +14,7 @@ const initialTransactions: Transaction[] = [
     expiryDate: '12/25',
     status: 'Success',
     responseCode: '00',
-    gatewayMessage: 'Transaction Approved',
+    gatewayMessage: 'লেনদেন অনুমোদিত',
     transactionId: 'tpay_mock_1a2b3c4d',
   },
   {
@@ -26,7 +26,7 @@ const initialTransactions: Transaction[] = [
     expiryDate: '11/24',
     status: 'Failed',
     responseCode: '51',
-    gatewayMessage: 'Insufficient Funds',
+    gatewayMessage: 'অপর্যাপ্ত তহবিল',
     transactionId: 'tpay_mock_5e6f7g8h',
   },
   {
@@ -38,7 +38,7 @@ const initialTransactions: Transaction[] = [
     expiryDate: '01/26',
     status: 'Success',
     responseCode: '00',
-    gatewayMessage: 'Transaction Approved',
+    gatewayMessage: 'লেনদেন অনুমোদিত',
     transactionId: 'tpay_mock_9i0j1k2l',
   },
     {
@@ -50,7 +50,7 @@ const initialTransactions: Transaction[] = [
     expiryDate: '12/25',
     status: 'Success',
     responseCode: '00',
-    gatewayMessage: 'Transaction Approved',
+    gatewayMessage: 'লেনদেন অনুমোদিত',
     transactionId: 'tpay_mock_3m4n5o6p',
   },
   {
@@ -62,7 +62,7 @@ const initialTransactions: Transaction[] = [
     expiryDate: '11/24',
     status: 'Failed',
     responseCode: '05',
-    gatewayMessage: 'Do Not Honor',
+    gatewayMessage: 'লেনদেন প্রত্যাখ্যান করা হয়েছে',
     transactionId: 'tpay_mock_7q8r9s0t',
   },
 ];
