@@ -14,6 +14,7 @@ import {
   Trash2,
   ShieldCheck,
   ClipboardCheck,
+  Mic,
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
@@ -38,6 +39,7 @@ const navItems = [
   { href: '/dashboard/history', icon: History, label: 'History' },
   { href: '/dashboard/readiness', icon: ShieldCheck, label: 'Launch Readiness' },
   { href: '/dashboard/checklist', icon: ClipboardCheck, label: 'Promotion Checklist' },
+  { href: '/dashboard/pitch', icon: Mic, label: 'Pitch Guide' },
 ]
 
 export default function DashboardLayout({
