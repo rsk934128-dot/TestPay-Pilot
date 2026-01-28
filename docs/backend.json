@@ -8,23 +8,11 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "Unique identifier for the user.",
-          "format": "uuid"
+          "description": "Unique identifier for the user, matching Firebase Auth UID."
         },
         "mobileNumber": {
           "type": "string",
-          "description": "User's mobile phone number.",
-          "format": "string"
-        },
-        "email": {
-          "type": "string",
-          "description": "User's email address.",
-          "format": "email"
-        },
-        "otp": {
-          "type": "string",
-          "description": "One-time password for authentication (fake OTP allowed in pilot).",
-          "format": "string"
+          "description": "User's mobile phone number."
         },
         "createdAt": {
           "type": "string",
@@ -41,8 +29,7 @@
   },
   "auth": {
     "providers": [
-      "password",
-      "anonymous"
+      "phone"
     ]
   },
   "firestore": {
@@ -54,7 +41,7 @@
           "schema": {
             "$ref": "#/backend/entities/User"
           },
-          "description": "Stores user data. Each document is uniquely identified by the user's UID.  Authentication is handled via Firebase Authentication (password, anonymous).",
+          "description": "Stores user data. Each document is uniquely identified by the user's UID. Authentication is handled via Firebase Authentication (phone).",
           "params": [
             {
               "name": "userId",
@@ -70,7 +57,7 @@
           "schema": {
             "$ref": "#/backend/entities/Transaction"
           },
-          "description": "Stores transaction data for each user.  Path-based ownership ensures only the user can access their transaction data.",
+          "description": "Stores transaction data for each user. Path-based ownership ensures only the user can access their transaction data.",
           "params": [
             {
               "name": "userId",
@@ -84,6 +71,6 @@
         }
       }
     ],
-    "reasoning": "The Firestore data structure is designed to support the TestPay Pilot application, focusing on secure authentication and transaction simulation. It prioritizes authorization independence by avoiding hierarchical `get()` calls in security rules. This is achieved by using path-based ownership for user data, thus avoiding any denormalization.\n\nThe `/users/{userId}` collection stores user information. Transactions are nested under each user (`/users/{userId}/transactions/{transactionId}`), providing clear ownership and simplifying security rules. This structure facilitates secure `list` operations because access control is based on path ownership, ensuring that users can only access their own transaction data. The design adheres to the principle of Structural Segregation, as each collection contains data with homogeneous security requirements. Explicit state modeling is implicitly achieved through the success/failure status of transactions. This architecture supports the QAPs by enabling secure filtering and authorization based solely on the `request.auth.uid` and the document path."
+    "reasoning": "The Firestore data structure is designed to support the TestPay Pilot application, focusing on secure authentication and transaction simulation. It prioritizes authorization independence by avoiding hierarchical `get()` calls in security rules. This is achieved by using path-based ownership for user data, thus avoiding any denormalization.\n\nThe `/users/{userId}` collection stores user information. Transactions are nested under each user (`/users/{userId}/transactions/{transactionId}`), providing clear ownership and simplifying security rules. This structure facilitates secure `list` operations because access control is based on path ownership, ensuring that users can only access their own transaction data. The design adheres to the principle of Structural Segregation, as each collection contains data with homogeneous security requirements. Explicit state modeling is implicitly achieved through the success/failure status of transactions. This architecture supports the QAPs by enabling secure filtering and authorization based on a user's auth UID and the document path."
   }
 }

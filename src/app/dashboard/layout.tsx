@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import {
   CreditCard,
   History,
@@ -16,7 +16,9 @@ import {
   ClipboardCheck,
   Mic,
   Projector,
+  Loader2,
 } from 'lucide-react'
+import { signOut } from 'firebase/auth'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -33,6 +35,8 @@ import { Icons } from '@/components/icons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { ResetDataDialog } from '@/components/reset-data-dialog'
+import { useAuth, useUser } from '@/firebase'
+import { useEffect } from 'react'
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -50,7 +54,29 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
-  const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
+  const router = useRouter()
+  const auth = useAuth()
+  const { user, isUserLoading } = useUser()
+  const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar')
+
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      router.push('/')
+    }
+  }, [user, isUserLoading, router])
+
+  const handleLogout = async () => {
+    await signOut(auth)
+    router.push('/')
+  }
+
+  if (isUserLoading || !user) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    )
+  }
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -64,9 +90,12 @@ export default function DashboardLayout({
               <Icons.logo />
               <span className="">TestPay</span>
             </Link>
-             <Badge variant="outline" className="ml-auto border-orange-500 text-orange-500">
-                TEST MODE
-              </Badge>
+            <Badge
+              variant="outline"
+              className="ml-auto border-orange-500 text-orange-500"
+            >
+              TEST MODE
+            </Badge>
           </div>
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
@@ -91,18 +120,22 @@ export default function DashboardLayout({
           <div className="mt-auto p-4">
             <div className="flex items-center gap-4">
               {userAvatar && (
-                 <Image
-                    src={userAvatar.imageUrl}
-                    width={40}
-                    height={40}
-                    alt={userAvatar.description}
-                    data-ai-hint={userAvatar.imageHint}
-                    className="rounded-full"
-                  />
+                <Image
+                  src={userAvatar.imageUrl}
+                  width={40}
+                  height={40}
+                  alt={userAvatar.description}
+                  data-ai-hint={userAvatar.imageHint}
+                  className="rounded-full"
+                />
               )}
               <div className="flex-1 overflow-hidden">
-                <p className="font-semibold truncate">Pilot User</p>
-                <p className="text-xs text-muted-foreground truncate">pilot@testpay.app</p>
+                <p className="font-semibold truncate">
+                  {user.phoneNumber || 'User'}
+                </p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {user.uid}
+                </p>
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -119,8 +152,8 @@ export default function DashboardLayout({
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <ResetDataDialog>
-                     <DropdownMenuItem
-                      onSelect={(e) => e.preventDefault()}
+                    <DropdownMenuItem
+                      onSelect={e => e.preventDefault()}
                       className="text-destructive focus:bg-destructive/10 focus:text-destructive"
                     >
                       <Trash2 className="mr-2 h-4 w-4" />
@@ -128,11 +161,9 @@ export default function DashboardLayout({
                     </DropdownMenuItem>
                   </ResetDataDialog>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href="/">
-                      <LogOut className="mr-2 h-4 w-4" />
-                      <span>Log out</span>
-                    </Link>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -142,13 +173,16 @@ export default function DashboardLayout({
       </div>
       <div className="flex flex-col">
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-           <Alert className="border-yellow-200 bg-yellow-50/50 text-yellow-900 [&>svg]:text-yellow-500">
-              <AlertTriangle className="h-4 w-4" />
-              <AlertTitle className='font-semibold'>You are in TEST MODE.</AlertTitle>
-              <AlertDescription>
-                No real money will be charged. This is a pilot testing environment.
-              </AlertDescription>
-            </Alert>
+          <Alert className="border-yellow-200 bg-yellow-50/50 text-yellow-900 [&>svg]:text-yellow-500">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle className="font-semibold">
+              You are in TEST MODE.
+            </AlertTitle>
+            <AlertDescription>
+              No real money will be charged. This is a pilot testing
+              environment.
+            </AlertDescription>
+          </Alert>
           {children}
         </main>
         <footer className="p-6 pt-0 text-center text-sm text-muted-foreground">
