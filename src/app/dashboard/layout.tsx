@@ -13,6 +13,7 @@ import {
   AlertTriangle,
   Trash2,
   ShieldCheck,
+  ClipboardCheck,
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
@@ -36,6 +37,7 @@ const navItems = [
   { href: '/dashboard/payment', icon: CreditCard, label: 'New Payment' },
   { href: '/dashboard/history', icon: History, label: 'History' },
   { href: '/dashboard/readiness', icon: ShieldCheck, label: 'Launch Readiness' },
+  { href: '/dashboard/checklist', icon: ClipboardCheck, label: 'Promotion Checklist' },
 ]
 
 export default function DashboardLayout({
