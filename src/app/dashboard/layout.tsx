@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   ClipboardCheck,
   Mic,
+  Projector,
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
@@ -40,6 +41,7 @@ const navItems = [
   { href: '/dashboard/readiness', icon: ShieldCheck, label: 'Launch Readiness' },
   { href: '/dashboard/checklist', icon: ClipboardCheck, label: 'Promotion Checklist' },
   { href: '/dashboard/pitch', icon: Mic, label: 'Pitch Guide' },
+  { href: '/dashboard/deck', icon: Projector, label: 'Executive Deck' },
 ]
 
 export default function DashboardLayout({
