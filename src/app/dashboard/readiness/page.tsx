@@ -20,9 +20,9 @@ const readinessData = {
 }
 
 const statusIcons = {
-    UP: <CheckCircle className="h-5 w-5 text-green-500" />,
+    UP: <CheckCircle className="h-5 w-5 text-chart-2" />,
     DEGRADED: <AlertCircle className="h-5 w-5 text-yellow-500" />,
-    DOWN: <XCircle className="h-5 w-5 text-red-500" />,
+    DOWN: <XCircle className="h-5 w-5 text-destructive" />,
 }
 
 
@@ -46,11 +46,11 @@ export default function ReadinessPage() {
         </p>
       </div>
 
-       <Card className={`mb-6 border-2 ${isReady ? 'border-green-500 bg-green-950/10' : 'border-red-500 bg-red-950/20'}`}>
+       <Card className={`mb-6 border-2 ${isReady ? 'border-chart-2 bg-chart-2/10' : 'border-destructive bg-destructive/10'}`}>
             <CardHeader className="flex flex-row items-center gap-4 space-y-0 p-4">
-                 {isReady ? <ShieldCheck className="h-8 w-8 text-green-600" /> : <XCircle className="h-8 w-8 text-red-600" />}
+                 {isReady ? <ShieldCheck className="h-8 w-8 text-chart-2" /> : <XCircle className="h-8 w-8 text-destructive" />}
                 <div>
-                    <CardTitle className={`text-lg font-semibold ${isReady ? 'text-green-800 dark:text-green-300' : 'text-red-800 dark:text-red-300'}`}>
+                    <CardTitle className={`text-lg font-semibold ${isReady ? 'text-chart-2' : 'text-destructive'}`}>
                         {isReady ? 'This system is safe to proceed to STAGING' : 'Promotion to STAGING is Blocked'}
                     </CardTitle>
                 </div>
@@ -77,7 +77,7 @@ export default function ReadinessPage() {
             <Separator />
             <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Critical Issues</span>
-                 <span className={`font-bold text-lg ${criticalIssues > 0 ? 'text-red-500' : 'text-green-500'}`}>{criticalIssues}</span>
+                 <span className={`font-bold text-lg ${criticalIssues > 0 ? 'text-destructive' : 'text-chart-2'}`}>{criticalIssues}</span>
             </div>
             <Separator />
             <div className="flex justify-between items-center">

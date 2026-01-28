@@ -83,7 +83,7 @@ export default function PitchGuidePage() {
                         <li key={index}>
                           {point.includes("GREEN") ? (
                             <>
-                              Indicator is <Badge className="bg-green-100 font-semibold text-green-800 dark:bg-green-900/50 dark:text-green-300">GREEN</Badge>
+                              Indicator is <Badge variant="outline" className="border-chart-2/60 bg-chart-2/10 font-semibold text-chart-2">GREEN</Badge>
                             </>
                           ) : (
                             point

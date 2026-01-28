@@ -90,7 +90,7 @@ export default function HistoryPage() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={tx.status === 'Success' ? 'default' : 'destructive'} className={tx.status === 'Success' ? `bg-green-100 text-green-800 dark:bg-green-800/20 dark:text-green-300` : `bg-red-100 text-red-800 dark:bg-red-800/20 dark:text-red-300`}>
+                        <Badge variant="outline" className={tx.status === 'Success' ? 'border-chart-2/60 bg-chart-2/10 text-chart-2' : 'border-destructive/60 bg-destructive/10 text-destructive'}>
                           {tx.status}
                         </Badge>
                       </TableCell>

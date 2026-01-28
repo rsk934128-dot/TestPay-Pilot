@@ -80,28 +80,28 @@ export default function DashboardPage() {
             </p>
           </CardContent>
         </Card>
-        <Card className="border-green-600 bg-green-100 text-green-900 dark:border-green-500 dark:bg-green-950 dark:text-green-200">
+        <Card className="border-chart-2/50 bg-chart-2/10">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-green-800 dark:text-green-200">
+            <CardTitle className="text-sm font-medium text-chart-2">
               Successful Payments
             </CardTitle>
-            <CheckCircle2 className="h-4 w-4 text-green-600" />
+            <CheckCircle2 className="h-4 w-4 text-chart-2" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-700 dark:text-green-400">{stats.success}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl font-bold text-chart-2">{stats.success}</div>
+            <p className="text-xs text-chart-2/80">
               {stats.total > 0 ? `${((stats.success / stats.total) * 100).toFixed(0)}% success rate` : 'No transactions yet'}
             </p>
           </CardContent>
         </Card>
-        <Card className="border-red-600 bg-red-100 text-red-900 dark:border-red-500 dark:bg-red-950 dark:text-red-200">
+        <Card className="border-destructive/50 bg-destructive/10">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-red-800 dark:text-red-200">Failed Payments</CardTitle>
-            <XCircle className="h-4 w-4 text-red-600" />
+            <CardTitle className="text-sm font-medium text-destructive">Failed Payments</CardTitle>
+            <XCircle className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-700 dark:text-red-400">{stats.failed}</div>
-             <p className="text-xs text-muted-foreground">
+            <div className="text-2xl font-bold text-destructive">{stats.failed}</div>
+             <p className="text-xs text-destructive/80">
               {stats.total > 0 ? `${((stats.failed / stats.total) * 100).toFixed(0)}% failure rate` : 'No transactions yet'}
             </p>
           </CardContent>
@@ -152,7 +152,7 @@ export default function DashboardPage() {
                         </div>
                       </TableCell>
                       <TableCell className="text-center">
-                        <Badge variant={tx.status === 'Success' ? 'default' : 'destructive'} className={tx.status === 'Success' ? `bg-green-100 text-green-800 dark:bg-green-800/20 dark:text-green-300` : `bg-red-100 text-red-800 dark:bg-red-800/20 dark:text-red-300`}>
+                        <Badge variant="outline" className={tx.status === 'Success' ? 'border-chart-2/60 bg-chart-2/10 text-chart-2' : 'border-destructive/60 bg-destructive/10 text-destructive'}>
                           {tx.status}
                         </Badge>
                       </TableCell>

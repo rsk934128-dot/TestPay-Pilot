@@ -77,7 +77,7 @@ export default function ExecutiveDeckPage() {
                                 <li key={i} className={index === 1 ? 'pl-2' : ''}>
                                     {point.includes("GREEN") ? (
                                         <>
-                                            System Launch Readiness Indicator is <span className="font-bold text-green-600">GREEN.</span>
+                                            System Launch Readiness Indicator is <span className="font-bold text-chart-2">GREEN.</span>
                                         </>
                                     ) : (
                                         point
