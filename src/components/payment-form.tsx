@@ -224,6 +224,7 @@ export function PaymentForm() {
                 <FormMessage />
               </FormItem>
             )}
+          />
         )}
         
         <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90" disabled={isPending}>
