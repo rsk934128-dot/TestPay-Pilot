@@ -16,7 +16,8 @@ import { resetAllData } from '@/lib/actions'
 import { Loader2 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { Input } from '@/components/ui/input'
-import { Label } from './ui/label'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
 
 export function ResetDataDialog({ children }: { children: React.ReactNode }) {
   const [isPending, setIsPending] = useState(false)
