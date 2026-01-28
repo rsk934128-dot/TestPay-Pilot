@@ -1,197 +1,194 @@
 'use client'
 
-import { CheckCircle, CreditCard, Banknote } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Icons } from '@/components/icons'
+import Link from 'next/link'
+import {
+  ArrowUpRight,
+  DollarSign,
+  Users,
+  ListChecks,
+  ShieldCheck,
+  AlertCircle,
+  CheckCircle,
+} from 'lucide-react'
+
+import { getTransactions, getTransactionStats } from '@/lib/data'
+import { formatCurrency } from '@/lib/utils'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { TransactionChart } from '@/components/transaction-chart'
+import { PlaceHolderImages } from '@/lib/placeholder-images'
 
-export default function SettlementProofPage() {
+export default function DashboardPage() {
+  const transactions = getTransactions().slice(0, 5) // Get last 5 for recent
+  const stats = getTransactionStats()
+  const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar')
+
+  const totalVolume = getTransactions().reduce((sum, tx) => tx.status === 'Success' ? sum + tx.amount : sum, 0)
+  const successRate = stats.total > 0 ? (stats.success / stats.total) * 100 : 0
+
+  // Mock data for reconciliation and 2FA status
+  const reconciliationStatus = 'সফল' // 'সফল' or 'ব্যর্থ'
+  const twoFactorStatus = 'সক্রিয়' // 'সক্রিয়' or 'নিষ্ক্রিয়'
+
   return (
-    <div className="flex flex-col flex-1 h-full -m-6 p-0">
-      {/* Page Header */}
-      <header className="bg-primary text-primary-foreground py-4 px-6 rounded-t-lg">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-4">
-             <div className="w-12 h-12 bg-white/90 rounded-md flex items-center justify-center">
-                <Icons.logo />
+    <div className="flex flex-1 flex-col gap-4 md:gap-8">
+      <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">মোট লেনদেন</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatCurrency(totalVolume)}</div>
+            <p className="text-xs text-muted-foreground">
+              সমস্ত সফল লেনদেনের মোট পরিমাণ
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">সফলতার হার</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{successRate.toFixed(2)}%</div>
+            <p className="text-xs text-muted-foreground">
+              {stats.total}টি লেনদেনের মধ্যে {stats.success}টি সফল
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">দৈনিক পুনর্মিলন</CardTitle>
+            <ListChecks className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            {reconciliationStatus === 'সফল' ? (
+                <div className="flex items-center gap-2 text-2xl font-bold text-chart-2">
+                    <CheckCircle className="h-6 w-6"/> 
+                    <span>সফল</span>
+                </div>
+            ) : (
+                <div className="flex items-center gap-2 text-2xl font-bold text-destructive">
+                    <AlertCircle className="h-6 w-6"/>
+                    <span>ব্যর্থ</span>
+                </div>
+            )}
+            <p className="text-xs text-muted-foreground">আজকের ডেটা সম্পূর্ণ মিলেছে</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">2FA নিরাপত্তা</CardTitle>
+            <ShieldCheck className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            {twoFactorStatus === 'সক্রিয়' ? (
+                <div className="flex items-center gap-2 text-2xl font-bold text-chart-2">
+                    <ShieldCheck className="h-6 w-6"/> 
+                    <span>সক্রিয়</span>
+                </div>
+            ) : (
+                <div className="flex items-center gap-2 text-2xl font-bold text-yellow-500">
+                    <AlertCircle className="h-6 w-6"/>
+                    <span>নিষ্ক্রিয়</span>
+                </div>
+            )}
+            <p className="text-xs text-muted-foreground">সকল অ্যাডমিন অ্যাকাউন্টে সক্রিয়</p>
+          </CardContent>
+        </Card>
+      </div>
+      <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
+        <Card className="xl:col-span-2">
+          <CardHeader className="flex flex-row items-center">
+            <div className="grid gap-2">
+              <CardTitle>সাম্প্রতিক লেনদেন</CardTitle>
+              <CardDescription>
+                আপনার স্টোর থেকে শেষ ৫টি লেনদেন।
+              </CardDescription>
             </div>
-            <div>
-                <h1 className="text-xl font-bold tracking-tight">লাইভ পেমেন্ট সিস্টেম – প্রথম সেটেলমেন্ট প্রমাণ</h1>
-                <p className="text-sm text-primary-foreground/80">টেস্টপে পাইলট - বাংলাদেশ</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Icons.shurjopay className="h-8 w-auto" />
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 flex-1 bg-secondary/30 rounded-b-lg">
-        {/* Left Column: Key Metrics */}
-        <div className="lg:col-span-3">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">কী মেট্রিক্স</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 text-sm">
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">মোট লেনদেন (লাইভ)</span>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-chart-2" />
-                  <span className="font-semibold">1</span>
-                </div>
-              </div>
-               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">নিষ্পত্তি পরিমাণ</span>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-chart-2" />
-                  <span className="font-semibold">৳10</span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">গেটওয়ে</span>
-                 <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-chart-2" />
-                  <span className="font-semibold">সুরজোপে</span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">ব্যাংক অ্যাকাউন্ট</span>
-                 <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-chart-2" />
-                  <span className="font-semibold">ব্যক্তিগত/অ্যাডমিন</span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">স্ট্যাটাস</span>
-                <div className="flex items-center gap-2">
-                   <Badge className="bg-chart-2/20 text-chart-2 border-chart-2/40">সাফল্য</Badge>
-                   <CheckCircle className="w-5 h-5 text-chart-2" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Middle Column: Transaction Snapshot */}
-        <div className="lg:col-span-6">
-          <Card className="h-full">
-            <CardHeader>
-              <CardTitle className="text-lg">লেনদেনের স্ন্যাপশট</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col justify-between h-full pt-6">
-              <div className="flex items-start gap-6">
-                {/* Transaction Details */}
-                <div className="flex-1 space-y-4">
-                  <div className="flex items-center p-3 rounded-md bg-muted/50">
-                    <Icons.shurjopay className="h-6 w-auto" />
-                    <span className="ml-2 font-semibold">সুরজোপে ড্যাশবোর্ড</span>
-                  </div>
-                  <div className="space-y-3 p-3">
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-muted-foreground">অর্ডার আইডি:</span>
-                      <span className="font-mono">-----------</span>
-                    </div>
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-muted-foreground">পরিমাণ:</span>
-                      <span className="font-bold text-lg">৳10.00</span>
-                    </div>
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-muted-foreground">স্ট্যাটাস:</span>
-                      <Badge variant="outline" className="text-chart-2 border-chart-2/50">সাফল্য</Badge>
-                    </div>
-                  </div>
-                  
-                  {/* Mini History */}
-                  <div className="bg-muted/50 rounded-lg p-3 text-sm">
-                    <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-chart-2 animate-pulse"></div>
-                            <span className="font-semibold">লাইভ-০০১</span>
-                        </div>
-                        <span className="font-semibold">৳১০.০০</span>
-                        <div className="flex items-center gap-2 text-chart-2">
-                            <CheckCircle className="w-4 h-4"/>
-                            <span>সাফল্য</span>
-                        </div>
-                    </div>
-                  </div>
-
-                </div>
-
-                {/* Phone Mockup */}
-                <div className="min-w-[220px] mt-4">
-                  <div className="bg-black border-4 border-gray-700 rounded-3xl p-1 shadow-xl">
-                    <div className="bg-white rounded-2xl p-3 text-gray-800 space-y-2 h-[250px] flex flex-col">
-                       <div className="flex justify-between items-center text-xs px-1">
-                        <span className="text-gray-500">＜</span>
-                        <span className="font-semibold">ব্যাংক এসএমএস</span>
-                        <span className="font-bold">⋮</span>
+            <Button asChild size="sm" className="ml-auto gap-1">
+              <Link href="/dashboard/history">
+                সব দেখুন
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>গ্রাহক</TableHead>
+                  <TableHead className="text-center">স্ট্যাটাস</TableHead>
+                  <TableHead className="text-right">পরিমাণ</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {transactions.map(tx => (
+                  <TableRow key={tx.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        {userAvatar && (
+                          <Avatar className="hidden h-9 w-9 sm:flex">
+                              <AvatarImage src={userAvatar.imageUrl} alt="Avatar" data-ai-hint={userAvatar.imageHint} />
+                              <AvatarFallback>??</AvatarFallback>
+                          </Avatar>
+                        )}
+                        <div className="font-medium">**** {tx.cardNumber.slice(-4)}</div>
                       </div>
-                      <div className="flex-1 flex items-end pb-2">
-                        <div className="bg-gray-200 rounded-lg p-3 text-xs w-full">
-                          <p>আপনার A/C *1234 DBBL-এ TK. 10.00 জমা হয়েছে। ব্যালেন্স TK. xxx, ২৯ জানু ২০২৬ তারিখে।</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Process Flow */}
-              <div className="flex items-center justify-around pt-4 mt-auto">
-                  <div className="flex flex-col items-center gap-2 text-center w-24">
-                      <div className="w-12 h-12 flex items-center justify-center bg-blue-100 text-primary rounded-full border-2 border-primary">
-                          <CreditCard className="w-6 h-6"/>
-                      </div>
-                      <span className="text-xs font-semibold">পেমেন্ট শুরু হয়েছে</span>
-                  </div>
-                  <div className="flex-1 border-t-2 border-dashed mx-2 self-center -translate-y-5"></div>
-                  <div className="flex flex-col items-center gap-2 text-center w-24">
-                      <div className="w-12 h-12 flex items-center justify-center bg-green-100 text-chart-2 rounded-full border-2 border-chart-2">
-                          <CheckCircle className="w-6 h-6"/>
-                      </div>
-                      <span className="text-xs font-semibold">গেটওয়ে সফল</span>
-                  </div>
-                  <div className="flex-1 border-t-2 border-dashed mx-2 self-center -translate-y-5"></div>
-                  <div className="flex flex-col items-center gap-2 text-center w-24">
-                      <div className="w-12 h-12 flex items-center justify-center bg-green-100 text-chart-2 rounded-full border-2 border-chart-2">
-                          <Banknote className="w-6 h-6"/>
-                      </div>
-                      <span className="text-xs font-semibold">ব্যাংক ক্রেডিট</span>
-                  </div>
-              </div>
-
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Right Column: Audit Summary */}
-        <div className="lg:col-span-3">
-          <Card className="border-accent">
-            <CardHeader className="bg-accent/10">
-              <CardTitle className="text-lg text-accent-foreground/90">অডিট সারাংশ</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 text-sm pt-6">
-              <div className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-accent flex-shrink-0" />
-                  <span>পাইলট মোড: হ্যাঁ (সীমা ৳10)</span>
-              </div>
-              <div className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-accent flex-shrink-0" />
-                  <span>রোলব্যাক পরীক্ষিত: <CheckCircle className="inline w-5 h-5 text-chart-2" /></span>
-              </div>
-              <div className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-accent flex-shrink-0" />
-                  <span>পরিবেশ: <Badge className="bg-primary/80">লাইভ</Badge> .env.production</span>
-              </div>
-              <div className="flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-accent flex-shrink-0" />
-                  <span>সম্মতি: নিরাপদ শংসাপত্র শুধুমাত্র অ্যাডমিন</span>
-              </div>
-            </CardContent>
-          </Card>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Badge variant="outline" className={tx.status === 'Success' ? 'border-chart-2/60 bg-chart-2/10 text-chart-2' : 'border-destructive/60 bg-destructive/10 text-destructive'}>
+                          {tx.status === 'Success' ? 'সফল' : 'ব্যর্থ'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">{formatCurrency(tx.amount)}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+        <div className="space-y-4 md:space-y-8">
+            <TransactionChart stats={stats} />
+             <Card>
+                <CardHeader>
+                <CardTitle>শীর্ষ ব্যর্থতার কারণ</CardTitle>
+                <CardDescription>
+                    যে কারণে সবচেয়ে বেশি পেমেন্ট ব্যর্থ হয়েছে।
+                </CardDescription>
+                </CardHeader>
+                <CardContent>
+                {stats.topFailureReasons.length > 0 ? (
+                    <ul className="space-y-3">
+                    {stats.topFailureReasons.map((reason, index) => (
+                        <li key={index} className="flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground truncate pr-4">{reason.reason}</span>
+                            <span className="font-medium">{reason.count}</span>
+                        </li>
+                    ))}
+                    </ul>
+                ) : (
+                    <p className="text-sm text-muted-foreground">কোনো ব্যর্থ লেনদেন নেই।</p>
+                )}
+                </CardContent>
+            </Card>
         </div>
       </div>
     </div>
