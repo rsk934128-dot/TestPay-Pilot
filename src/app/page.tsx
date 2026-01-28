@@ -90,18 +90,6 @@ export default function LandingPage() {
   }, [user, isUserLoading, router])
 
   useEffect(() => {
-    if (auth && !recaptchaVerifier.current) {
-      recaptchaVerifier.current = new RecaptchaVerifier(
-        auth,
-        'recaptcha-container',
-        {
-          size: 'invisible',
-        }
-      )
-    }
-  }, [auth])
-
-  useEffect(() => {
     let timer: NodeJS.Timeout
     if (countdown > 0) {
       timer = setTimeout(() => setCountdown(countdown - 1), 1000)
@@ -110,17 +98,27 @@ export default function LandingPage() {
   }, [countdown])
 
   const handleSendOtp = async () => {
-    if (!recaptchaVerifier.current) {
+    if (!auth) {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'reCAPTCHA not initialized. Please refresh the page.',
-      })
-      return
+        description: 'Authentication service not available. Please refresh.',
+      });
+      return;
     }
-
     setIsSendingOtp(true)
     try {
+      // Lazy initialization of RecaptchaVerifier, create only if it doesn't exist
+      if (!recaptchaVerifier.current) {
+        recaptchaVerifier.current = new RecaptchaVerifier(
+          auth,
+          'recaptcha-container',
+          {
+            size: 'invisible',
+          }
+        )
+      }
+
       const result = await signInWithPhoneNumber(
         auth,
         phoneNumber,
@@ -139,13 +137,8 @@ export default function LandingPage() {
         title: 'Error Sending OTP',
         description: error.message,
       })
-      // Reset reCAPTCHA if it fails
-      if (
-        typeof grecaptcha !== 'undefined' &&
-        recaptchaVerifier.current.widgetId !== undefined
-      ) {
-        grecaptcha.reset(recaptchaVerifier.current.widgetId)
-      }
+      // If an error occurs, nullify the verifier ref to allow re-creation on next attempt.
+      recaptchaVerifier.current = null;
     } finally {
       setIsSendingOtp(false)
     }
