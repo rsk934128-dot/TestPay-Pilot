@@ -80,46 +80,62 @@ export default function LandingPage() {
   }, [router]);
 
   const handleConnectWallet = async () => {
-    setIsLoading(true)
-    setError(null)
-    if ((window as any).ethereum) {
+    setIsLoading(true);
+    setError(null);
+    
+    if (typeof (window as any).ethereum !== 'undefined' && (window as any).ethereum.isMetaMask) {
       try {
         const accounts: string[] = await (window as any).ethereum.request({
           method: 'eth_requestAccounts',
-        })
+        });
+        
         if (accounts.length > 0) {
-          const userAccount = accounts[0]
-          setAccount(userAccount)
-          localStorage.setItem('userAccount', userAccount)
+          const userAccount = accounts[0];
+          setAccount(userAccount);
+          localStorage.setItem('userAccount', userAccount);
           toast({
             title: 'Wallet Connected',
-            description: `Connected with address: ${userAccount.substring(
-              0,
-              6
-            )}...${userAccount.substring(userAccount.length - 4)}`,
-          })
-          router.push('/dashboard')
+            description: `Connected with address: ${userAccount.substring(0, 6)}...${userAccount.substring(userAccount.length - 4)}`,
+          });
+          router.push('/dashboard');
+        } else {
+          setError('No accounts found. Please unlock your MetaMask wallet and try again.');
+          toast({
+            variant: 'destructive',
+            title: 'Connection Failed',
+            description: 'No accounts found in MetaMask.',
+          });
         }
       } catch (e: any) {
-        setError(e.message || 'An error occurred while connecting the wallet.')
-        toast({
-          variant: 'destructive',
-          title: 'Connection Failed',
-          description: e.message || 'Could not connect to MetaMask.',
-        })
+        if (e.code === 4001) {
+          // User rejected the request
+          setError('You rejected the connection request in MetaMask.');
+          toast({
+            variant: 'destructive',
+            title: 'Connection Rejected',
+            description: 'Please approve the request in MetaMask to connect.',
+          });
+        } else {
+          setError(e.message || 'An error occurred while connecting the wallet.');
+          toast({
+            variant: 'destructive',
+            title: 'Connection Failed',
+            description: e.message || 'Could not connect to MetaMask.',
+          });
+        }
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     } else {
-      setError('MetaMask is not installed. Please install it to continue.')
+      setError('MetaMask is not installed. Please install it to continue.');
       toast({
         variant: 'destructive',
         title: 'MetaMask Not Found',
         description: 'Please install the MetaMask browser extension.',
-      })
-      setIsLoading(false)
+      });
+      setIsLoading(false);
     }
-  }
+  };
 
   const CurrentBannerIcon = featureBanners[currentBannerIndex].icon
 
