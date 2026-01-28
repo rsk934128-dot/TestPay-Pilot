@@ -1,8 +1,12 @@
+'use client'
+
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import {
   ArrowUpRight,
   CheckCircle2,
   CircleDollarSign,
+  CreditCard,
   XCircle,
 } from 'lucide-react'
 import { format } from 'date-fns'
@@ -29,6 +33,7 @@ import {
 import { Icons } from '@/components/icons'
 
 export default function DashboardPage() {
+  const router = useRouter()
   const stats = getTransactionStats()
   const recentTransactions = getTransactions().slice(0, 5)
 
@@ -54,27 +59,27 @@ export default function DashboardPage() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-green-500 bg-green-50/50 dark:bg-green-500/10">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Successful Payments
             </CardTitle>
-            <CheckCircle2 className="h-4 w-4 text-green-500" />
+            <CheckCircle2 className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.success}</div>
+            <div className="text-2xl font-bold text-green-700 dark:text-green-400">{stats.success}</div>
             <p className="text-xs text-muted-foreground">
               {stats.total > 0 ? `${((stats.success / stats.total) * 100).toFixed(0)}% success rate` : 'No transactions yet'}
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-red-500 bg-red-50/50 dark:bg-red-500/10">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Failed Payments</CardTitle>
-            <XCircle className="h-4 w-4 text-red-500" />
+            <XCircle className="h-4 w-4 text-red-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.failed}</div>
+            <div className="text-2xl font-bold text-red-700 dark:text-red-400">{stats.failed}</div>
              <p className="text-xs text-muted-foreground">
               {stats.total > 0 ? `${((stats.failed / stats.total) * 100).toFixed(0)}% failure rate` : 'No transactions yet'}
             </p>
@@ -113,7 +118,7 @@ export default function DashboardPage() {
                   const CardIcon = cardType === 'Other' ? CreditCard : Icons[cardType.toLowerCase() as keyof typeof Icons]
                   
                   return (
-                    <TableRow key={tx.id}>
+                    <TableRow key={tx.id} className="cursor-pointer" onClick={() => router.push(`/dashboard/result/${tx.id}`)}>
                       <TableCell>
                         <div className="flex items-center gap-3">
                            <CardIcon className="h-8 w-auto" />
@@ -126,7 +131,7 @@ export default function DashboardPage() {
                         </div>
                       </TableCell>
                       <TableCell className="text-center">
-                        <Badge variant={tx.status === 'Success' ? 'default' : 'destructive'} className={tx.status === 'Success' ? `bg-green-100 text-green-800` : ''}>
+                        <Badge variant={tx.status === 'Success' ? 'default' : 'destructive'} className={tx.status === 'Success' ? `bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300` : 'dark:bg-red-900/50 dark:text-red-300'}>
                           {tx.status}
                         </Badge>
                       </TableCell>

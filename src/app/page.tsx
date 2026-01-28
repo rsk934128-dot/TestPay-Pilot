@@ -1,7 +1,8 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Phone } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -13,10 +14,29 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Icons } from '@/components/icons'
 
 export default function LoginPage() {
   const router = useRouter()
+  const [countdown, setCountdown] = useState(0);
+  const [isSending, setIsSending] = useState(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [countdown]);
+
+  const handleSendOtp = () => {
+    setIsSending(true);
+    // Simulate API call
+    setTimeout(() => {
+      setIsSending(false);
+      setCountdown(30);
+    }, 1000);
+  };
+
 
   const handleLogin = (event: React.FormEvent) => {
     event.preventDefault()
@@ -30,26 +50,35 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         <Card className="shadow-2xl">
           <CardHeader className="text-center">
-            <div className="mx-auto mb-4">
-              <Icons.logo />
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+               <Phone className="h-8 w-8 text-primary" />
             </div>
             <CardTitle className="font-headline text-3xl">
               Welcome to TestPay
             </CardTitle>
             <CardDescription>
-              Enter a dummy email and OTP to access the pilot dashboard.
+              Enter a dummy mobile number and OTP to access the pilot.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="pilot@testpay.app"
-                  defaultValue="pilot@testpay.app"
-                />
+                <Label htmlFor="mobile">Mobile Number</Label>
+                <div className="flex gap-2">
+                    <Input
+                      id="country-code"
+                      type="text"
+                      className="w-20"
+                      defaultValue="+880"
+                    />
+                    <Input
+                      id="mobile"
+                      type="tel"
+                      placeholder="1700000000"
+                      defaultValue="1712345678"
+                      className="flex-1"
+                    />
+                </div>
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
@@ -57,9 +86,15 @@ export default function LoginPage() {
                   <Button
                     type="button"
                     variant="link"
-                    className="h-auto p-0 text-xs text-accent-foreground/80 hover:text-accent-foreground"
+                    className="h-auto p-0 text-xs text-accent-foreground/80 hover:text-accent-foreground disabled:text-muted-foreground disabled:no-underline"
+                    onClick={handleSendOtp}
+                    disabled={countdown > 0 || isSending}
                   >
-                    Send OTP
+                    {isSending
+                      ? 'Sending...'
+                      : countdown > 0
+                      ? `Resend in ${countdown}s`
+                      : 'Send OTP'}
                   </Button>
                 </div>
                 <Input id="otp" type="text" placeholder="123456" defaultValue="123456" />

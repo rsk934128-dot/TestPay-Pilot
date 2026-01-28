@@ -30,14 +30,15 @@ const prompt = ai.definePrompt({
   name: 'interpretApiResponseCodePrompt',
   input: {schema: InterpretApiResponseCodeInputSchema},
   output: {schema: InterpretApiResponseCodeOutputSchema},
-  prompt: `You are an expert in interpreting API response codes from payment gateways.
+  prompt: `You are an expert in interpreting API response codes from payment gateways like Stripe, SSLCommerz, and ShurjoPay.
 
-You will be provided with an API response code and a gateway message. Your task is to provide a clear and concise human-readable interpretation of the response code and message, explaining what it means in the context of a payment transaction.
+You will be provided with an API response code and a gateway message. Your task is to provide a clear, human-readable interpretation. Structure your response in three parts using markdown:
+1.  **Possible Cause:** A brief explanation of what this code and message likely mean in the context of a payment transaction.
+2.  **Error Type:** Identify if it's more likely a user-side error (e.g., wrong card details, insufficient funds) or a system-side error (e.g., gateway configuration issue, network problem).
+3.  **Suggested Fix:** Recommend a clear next step for the user or developer testing the system.
 
 Response Code: {{{responseCode}}}
-Gateway Message: {{{gatewayMessage}}}
-
-Interpretation: `,
+Gateway Message: {{{gatewayMessage}}}`,
 });
 
 const interpretApiResponseCodeFlow = ai.defineFlow(

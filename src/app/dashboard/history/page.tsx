@@ -1,4 +1,6 @@
-import Link from 'next/link'
+'use client'
+
+import { useRouter } from 'next/navigation'
 import { CreditCard } from 'lucide-react'
 import { format } from 'date-fns'
 
@@ -23,6 +25,7 @@ import {
 import { Icons } from '@/components/icons'
 
 export default function HistoryPage() {
+  const router = useRouter()
   const transactions = getTransactions()
 
   return (
@@ -53,8 +56,7 @@ export default function HistoryPage() {
                 const cardType = getCardType(tx.cardNumber)
                 const CardIcon = cardType === 'Other' ? CreditCard : Icons[cardType.toLowerCase() as keyof typeof Icons]
                 return (
-                  <TableRow key={tx.id} asChild>
-                    <Link href={`/dashboard/result/${tx.id}`} className="cursor-pointer">
+                  <TableRow key={tx.id} className="cursor-pointer" onClick={() => router.push(`/dashboard/result/${tx.id}`)}>
                       <TableCell>
                         <div className="flex items-center gap-3">
                            <CardIcon className="h-8 w-auto" />
@@ -67,7 +69,7 @@ export default function HistoryPage() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={tx.status === 'Success' ? 'default' : 'destructive'} className={tx.status === 'Success' ? `bg-green-100 text-green-800` : ''}>
+                        <Badge variant={tx.status === 'Success' ? 'default' : 'destructive'} className={tx.status === 'Success' ? `bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300` : 'dark:bg-red-900/50 dark:text-red-300'}>
                           {tx.status}
                         </Badge>
                       </TableCell>
@@ -76,7 +78,6 @@ export default function HistoryPage() {
                         {format(new Date(tx.date), "dd MMM yyyy, HH:mm")}
                       </TableCell>
                       <TableCell className="text-right font-mono text-xs">{tx.transactionId}</TableCell>
-                    </Link>
                   </TableRow>
                 )}
               )}

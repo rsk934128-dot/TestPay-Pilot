@@ -1,11 +1,16 @@
+'use client'
+
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { useState } from 'react'
 import {
   CheckCircle2,
   XCircle,
   Calendar,
-  CircleDollarSign,
   CreditCard,
   Hash,
+  Copy,
+  Check,
 } from 'lucide-react'
 import { format } from 'date-fns'
 
@@ -21,13 +26,20 @@ import {
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { ResultDisplay } from '@/components/result-display'
-import Link from 'next/link'
 
 export default function ResultPage({ params }: { params: { id: string } }) {
+  const [copied, setCopied] = useState(false)
   const transaction = getTransactionById(params.id)
 
   if (!transaction) {
     notFound()
+  }
+
+  const handleCopy = () => {
+    if (!transaction) return
+    navigator.clipboard.writeText(transaction.transactionId)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
   }
 
   const isSuccess = transaction.status === 'Success'
@@ -38,6 +50,7 @@ export default function ResultPage({ params }: { params: { id: string } }) {
       label: 'Transaction ID',
       value: transaction.transactionId,
       isMono: true,
+      copyable: true,
     },
     {
       icon: Calendar,
@@ -68,27 +81,34 @@ export default function ResultPage({ params }: { params: { id: string } }) {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="rounded-lg border bg-secondary/30 p-4 space-y-4">
-            <div className="flex justify-between items-center">
+          <div className="space-y-4 rounded-lg border bg-secondary/30 p-4">
+            <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Response Code</span>
               <span className="font-mono text-sm font-semibold">{transaction.responseCode}</span>
             </div>
             <Separator />
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Gateway Message</span>
-              <span className="font-semibold text-right">{transaction.gatewayMessage}</span>
+              <span className="text-right font-semibold">{transaction.gatewayMessage}</span>
             </div>
           </div>
           
           <div className="space-y-4">
             <h3 className="font-semibold">Transaction Details</h3>
             <ul className="space-y-3 text-sm">
-              {details.map(({ icon: Icon, label, value, isMono }) => (
+              {details.map(({ icon: Icon, label, value, isMono, copyable }) => (
                 <li key={label} className="flex items-center justify-between">
                   <span className="flex items-center gap-2 text-muted-foreground">
                     <Icon className="h-4 w-4" /> {label}
                   </span>
-                  <span className={isMono ? 'font-mono text-xs' : ''}>{value}</span>
+                  <div className="flex items-center gap-1">
+                    <span className={isMono ? 'font-mono text-xs' : ''}>{value}</span>
+                    {copyable && (
+                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleCopy}>
+                          {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+                      </Button>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>

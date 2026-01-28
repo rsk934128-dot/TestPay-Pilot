@@ -57,9 +57,12 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
               )}
             </Button>
             {interpretation && (
-              <div className="mt-4 rounded-lg border bg-secondary/50 p-4">
+              <div className="mt-4 space-y-2 rounded-lg border bg-secondary/50 p-4">
                 <p className="font-semibold">Interpretation:</p>
-                <p className="text-muted-foreground">{interpretation}</p>
+                <p className="whitespace-pre-wrap text-muted-foreground">{interpretation}</p>
+                 <p className="pt-2 text-xs text-muted-foreground/80">
+                  * AI explanation is advisory, not official gateway documentation.
+                </p>
               </div>
             )}
           </AccordionContent>

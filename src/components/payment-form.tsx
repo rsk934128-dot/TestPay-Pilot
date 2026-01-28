@@ -40,6 +40,12 @@ const FormSchema = z.object({
 
 type FormValues = z.infer<typeof FormSchema>
 
+const presets = [
+    { name: 'Visa', number: '4242424242424242', expiry: '12/25', cvv: '123' },
+    { name: 'Mastercard', number: '5555555555555555', expiry: '11/24', cvv: '123' },
+    { name: 'Amex', number: '378282246310005', expiry: '01/26', cvv: '1234' },
+]
+
 export function PaymentForm() {
   const { toast } = useToast()
   const initialState: State = { message: null, errors: {} }
@@ -103,6 +109,27 @@ export function PaymentForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="space-y-2">
+            <FormLabel>Card Presets</FormLabel>
+            <div className="flex flex-wrap gap-2">
+                {presets.map(p => (
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        key={p.name}
+                        onClick={() => {
+                            form.setValue('cardNumber', p.number)
+                            form.setValue('expiryDate', p.expiry)
+                            form.setValue('cvv', p.cvv)
+                            form.trigger(['cardNumber', 'expiryDate', 'cvv'])
+                        }}
+                    >
+                        {p.name}
+                    </Button>
+                ))}
+            </div>
+        </div>
         <FormField
           control={form.control}
           name="cardNumber"
@@ -161,7 +188,7 @@ export function PaymentForm() {
                   defaultValue={field.value}
                   className="grid grid-cols-2 gap-4 md:grid-cols-4"
                 >
-                  {['10', '50'].map(val => (
+                  {['10', '50', '100'].map(val => (
                     <FormItem key={val} className="flex items-center space-x-3 space-y-0">
                       <FormControl>
                         <RadioGroupItem value={val} />

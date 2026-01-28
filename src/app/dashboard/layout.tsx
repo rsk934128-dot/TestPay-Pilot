@@ -10,6 +10,7 @@ import {
   LogOut,
   MoreHorizontal,
   Settings,
+  AlertTriangle,
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
@@ -24,6 +25,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { PlaceHolderImages } from '@/lib/placeholder-images'
 import { Icons } from '@/components/icons'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -51,6 +54,9 @@ export default function DashboardLayout({
               <Icons.logo />
               <span className="">TestPay</span>
             </Link>
+             <Badge variant="outline" className="ml-auto border-orange-500 text-orange-500">
+                TEST MODE
+              </Badge>
           </div>
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
@@ -116,8 +122,18 @@ export default function DashboardLayout({
       </div>
       <div className="flex flex-col">
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+           <Alert className="border-yellow-200 bg-yellow-50/50 text-yellow-900 [&>svg]:text-yellow-500">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle className='font-semibold'>You are in TEST MODE.</AlertTitle>
+              <AlertDescription>
+                No real money will be charged. This is a pilot testing environment.
+              </AlertDescription>
+            </Alert>
           {children}
         </main>
+        <footer className="p-6 pt-0 text-center text-sm text-muted-foreground">
+          <p>This is a pilot testing environment.</p>
+        </footer>
       </div>
     </div>
   )
