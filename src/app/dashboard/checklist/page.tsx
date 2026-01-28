@@ -19,47 +19,40 @@ const ChecklistItem = ({ children, id }: { children: React.ReactNode; id: string
 export default function PromotionChecklistPage() {
 
     const sections = {
-        "1. Environment & Safety": [
-            "Current environment confirmed as STAGING",
-            "LIVE environment access is locked and restricted",
-            "No test/sandbox credentials configured in LIVE",
-            "Rollback mechanism verified and documented",
+        "1. Environment & Credentials": [
+            "Current environment confirmed as STAGING.",
+            "LIVE environment access is locked and restricted to authorized personnel.",
+            "No test/sandbox credentials or keys (e.g., ShurjoPay) are configured in LIVE.",
+            "Configuration for LIVE has been validated and peer-reviewed.",
         ],
-        "2. Stability & Performance": [
-            "Minimum required test volume completed",
-            "Failure rate within approved threshold",
-            "No unresolved critical errors",
-            "Gateway uptime verified",
-            "Average response time within limits",
+        "2. Pre-Launch Checks": [
+            "Staging/Sandbox stability and performance tests passed.",
+            "Legal and compliance checks for the LIVE environment are complete.",
+            "A documented rollback mechanism has been verified and is ready.",
+            "The environment switch mechanism is confirmed to be ready for activation.",
         ],
-        "3. Failure Analysis & Resolution": [
-            "All failure types reviewed and categorized",
-            "Root cause identified for each critical failure",
-            "Fixes implemented and re-tested successfully",
-            "No unexplained or silent failures remain",
+        "3. Launch Readiness & Testing": [
+            "Stability & Performance: Minimum required test volume completed in STAGING.",
+            "Failure Analysis: All failure types from STAGING have been reviewed and categorized.",
+            "Failure Rate: The observed failure rate is within the approved threshold.",
+            "Resolution: Root causes for all critical failures are identified, and fixes are verified.",
+            "No unresolved critical or unexplained errors remain.",
         ],
-        "4. AI Explanation & Human Review": [
-            "AI explanations reviewed by QA/Admin",
-            "Low-confidence explanations manually verified",
-            "Misleading or incorrect explanations corrected or locked",
-            "AI clearly marked as advisory only",
+        "4. Safety & Governance": [
+            "Audit logging is enabled and verified for all critical actions in LIVE.",
+            "Role-Based Access Control (RBAC) is enforced for the LIVE environment.",
+            "Destructive actions (e.g., data reset) are protected with multi-factor confirmation.",
         ],
-        "5. Governance & Audit": [
-            "Audit logging enabled and verified",
-            "Role-based access control enforced",
-            "Destructive actions protected with confirmation",
-            "All STAGING actions traceable",
+        "5. Post-Launch Readiness": [
+            "Executive summary reports for the STAGING phase have been generated.",
+            "All reports have been reviewed by stakeholders and sensitive data is redacted.",
+            "Risk level for LIVE promotion is assessed as LOW / ACCEPTABLE.",
+            "There are no open incidents or unresolved investigations from the STAGING phase.",
         ],
-        "6. Launch Readiness Decision": [
-            "Launch Readiness indicator = 🟢 READY",
-            "No open incidents or unresolved investigations",
-            "Risk level assessed as LOW / ACCEPTABLE",
+        "6. Final Decision": [
+            "Launch Readiness Indicator = 🟢 READY",
+            "System is recommended for safe promotion to LIVE.",
         ],
-        "7. Reporting & Transparency": [
-            "Executive summary generated",
-            "Sensitive data redacted",
-            "Reports reviewed by stakeholders",
-        ]
     }
 
     const approvalRoles = [
@@ -73,10 +66,10 @@ export default function PromotionChecklistPage() {
         <div className="w-full max-w-4xl mx-auto space-y-8 pb-12">
             <div className="text-center space-y-2">
                 <h1 className="font-headline text-3xl font-semibold">
-                    STAGING → LIVE Promotion Checklist
+                    Sandbox → Live ENV Switch Checklist
                 </h1>
                 <p className="text-muted-foreground">
-                    Formal approval checklist for promoting the payment system from STAGING to LIVE.
+                    Formal approval checklist for promoting the payment system to a real-like testing environment.
                 </p>
             </div>
 
@@ -97,7 +90,7 @@ export default function PromotionChecklistPage() {
 
             <Card>
                 <CardHeader>
-                    <CardTitle className="text-lg">8. Final Approval</CardTitle>
+                    <CardTitle className="text-lg">Final Approval Sign-off</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="overflow-x-auto">
