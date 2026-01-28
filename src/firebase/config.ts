@@ -3,10 +3,10 @@ import type { FirebaseOptions } from "firebase/app";
 // This object is populated by Firebase App Hosting.
 // For local development, you should add your config here.
 export const firebaseConfig: FirebaseOptions = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID",
+    apiKey: "AIzaSyCc-Q-4vb7P19xnFcZk_HviqLemvkzUySk",
+    authDomain: "studio-580756327-d8c25.firebaseapp.com",
+    projectId: "studio-580756327-d8c25",
+    storageBucket: "studio-580756327-d8c25.appspot.com",
+    messagingSenderId: "553935170616",
+    appId: "1:553935170616:web:0348fd7c6b84b85acdcacd",
 };
