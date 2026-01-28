@@ -2,8 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowRight, Loader2 } from 'lucide-react'
-import { useEffect, useState, useTransition } from 'react'
-import { useFormState } from 'react-dom'
+import { useEffect, useState, useTransition, useActionState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -50,7 +49,7 @@ const presets = [
 export function PaymentForm() {
   const { toast } = useToast()
   const initialState: State = { message: null, errors: {} }
-  const [state, formAction] = useFormState(createTestPayment, initialState)
+  const [state, formAction] = useActionState(createTestPayment, initialState)
   const [isPending, startTransition] = useTransition()
 
   const [detectedCardType, setDetectedCardType] = useState<CardType>('Other')
