@@ -1,0 +1,107 @@
+/**
+ * This ruleset enforces a strict user-ownership security model for the TestPay Pilot application.
+ *
+ * Core Philosophy:
+ * The fundamental principle is that users have exclusive control over their own data. All
+ * user-specific information, including their profile and transaction history, is accessible
+ * only to the authenticated user who owns it.
+ *
+ * Data Structure:
+ * All data is organized hierarchically under the `/users/{userId}` path. A user's personal
+ * data is stored in the `/users/{userId}` document, and their related data, such as
+ * transactions, is stored in subcollections like `/users/{userId}/transactions/{transactionId}`.
+ * This structure inherently ties data ownership to the path, simplifying security logic.
+ *
+ * Key Security Decisions:
+ * - User Enumeration Disabled: Listing the top-level `/users` collection is explicitly
+ *   disallowed to prevent malicious actors from discovering the entire user base.
+ * - Strict Path-Based Ownership: All rules for reading or writing data under a
+ *   `/users/{userId}` path rely on verifying that the authenticated user's ID matches the
+ *   `userId` in the path. This avoids costly and complex lookups (`get()` calls).
+ * - Self-Service Account Management: Users are permitted to create their own user document
+ *   and manage their own subcollections, but they cannot interfere with any data
+ *   belonging to other users.
+ * - Relational Integrity: On creation, the `id` field inside a user document is validated
+ *   to ensure it matches the document's ID (`userId`), establishing a permanent and
+ *   immutable link to the user's authentication UID.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ----------------------------------------------------------------------
+    // Helper Functions
+    // ----------------------------------------------------------------------
+
+    /**
+     * Checks if the user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Checks if the currently authenticated user's UID matches the provided userId.
+     * This is the primary function for verifying data ownership.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * Checks for ownership on an existing document. Used for safe updates and deletes.
+     * Denies requests that target non-existent documents, preventing unintended side effects.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
+    }
+    
+    /**
+     * Ensures the user document's internal ID is set correctly during creation.
+     */
+    function hasValidUserDataOnCreate(userId) {
+      return request.resource.data.id == userId;
+    }
+    
+    /**
+     * Ensures the user document's internal ID cannot be changed after creation.
+     */
+    function hasImmutableUserDataOnUpdate() {
+      return request.resource.data.id == resource.data.id;
+    }
+
+    // ----------------------------------------------------------------------
+    // Collection Rules
+    // ----------------------------------------------------------------------
+
+    /**
+     * @description Controls access to a user's own profile document.
+     * @path /users/{userId}
+     * @allow A signed-in user (auth.uid='user_abc') can (get) their own document at `/users/user_abc`.
+     * @deny An anonymous user cannot (get) any user document. A signed-in user (auth.uid='user_xyz') cannot (update) a document at `/users/user_abc`.
+     * @principle Restricts access to a user's own data tree and prevents user enumeration.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false; // CRITICAL: Prevents listing all users in the app.
+      allow create: if isOwner(userId) && hasValidUserDataOnCreate(userId);
+      allow update: if isExistingOwner(userId) && hasImmutableUserDataOnUpdate();
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Controls access to a user's private transaction history.
+     * @path /users/{userId}/transactions/{transactionId}
+     * @allow A signed-in user (auth.uid='user_abc') can (create) a new transaction document in their own subcollection at `/users/user_abc/transactions/tx_123`.
+     * @deny A signed-in user (auth.uid='user_xyz') cannot (list) transactions from `/users/user_abc/transactions`.
+     * @principle Enforces document ownership for all operations based on the parent path.
+     */
+    match /users/{userId}/transactions/{transactionId} {
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+      allow create: if isOwner(userId);
+      allow update: if isExistingOwner(userId);
+      allow delete: if isExistingOwner(userId);
+    }
+  }
+}
