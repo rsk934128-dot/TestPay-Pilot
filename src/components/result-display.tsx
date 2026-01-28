@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { Loader2, Sparkles, ThumbsUp, ThumbsDown } from 'lucide-react'
+import { Loader2, Sparkles, ThumbsUp, ThumbsDown, Info } from 'lucide-react'
 
 import { getInterpretation } from '@/lib/actions'
 import type { Transaction } from '@/lib/definitions'
+import type { InterpretApiResponseCodeOutput } from '@/ai/flows/interpret-api-response-codes'
 import {
   Accordion,
   AccordionContent,
@@ -15,6 +16,13 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from './ui/skeleton'
 import { Badge } from './ui/badge'
 import { Separator } from './ui/separator'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+
 
 const renderInterpretation = (text: string) => {
     const lines = text.split('\n').filter(line => line.trim() !== '');
@@ -49,7 +57,7 @@ const renderInterpretation = (text: string) => {
 };
 
 export function ResultDisplay({ transaction }: { transaction: Transaction }) {
-  const [interpretation, setInterpretation] = useState<string | null>(null)
+  const [interpretation, setInterpretation] = useState<InterpretApiResponseCodeOutput | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   const handleInterpret = async () => {
@@ -59,9 +67,23 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
       transaction.responseCode,
       transaction.gatewayMessage
     )
-    setInterpretation(result)
+    if (result) {
+        setInterpretation(result);
+    } else {
+        setInterpretation({
+            interpretation: "Could not get an interpretation at this time. The AI model may be offline or an error occurred.",
+            confidence: 'Low',
+            explanationBasis: 'An error occurred while contacting the AI service.'
+        });
+    }
     setIsLoading(false)
   }
+
+  const confidenceColor = {
+    High: 'border-green-500 text-green-600',
+    Medium: 'border-yellow-500 text-yellow-600',
+    Low: 'border-red-500 text-red-600',
+  }[interpretation?.confidence || 'Low'];
 
   return (
     <div className="mt-6">
@@ -112,7 +134,7 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="text-xs font-semibold text-muted-foreground">AI Confidence:</span>
-                      <Badge variant="outline" className="border-green-500 text-green-600">High</Badge>
+                      <Badge variant="outline" className={confidenceColor}>{interpretation.confidence}</Badge>
                     </div>
                     <a href="#" onClick={(e) => e.preventDefault()} className="text-xs text-primary hover:underline">Official Docs (Placeholder)</a>
                   </div>
@@ -120,20 +142,57 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
                   <Separator />
 
                   <div className="font-sans text-sm">
-                    {renderInterpretation(interpretation)}
+                    {renderInterpretation(interpretation.interpretation)}
                   </div>
                 
+                 <Accordion type="single" collapsible className="w-full -mb-4">
+                    <AccordionItem value="why" className="border-b-0">
+                        <AccordionTrigger className="py-2 text-xs text-muted-foreground hover:no-underline hover:text-primary">
+                            <div className="flex items-center gap-1">
+                                <Info className="h-3 w-3" />
+                                Why this explanation?
+                            </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="pt-2 text-xs text-muted-foreground space-y-2">
+                            <p><span className="font-semibold">Basis:</span> {interpretation.explanationBasis}</p>
+                            <p><span className="font-semibold">Model:</span> Gemini</p>
+                            <div className="flex items-center gap-2">
+                            <span className="font-semibold">Reviewed:</span>
+                            <Badge variant="secondary">Not Yet</Badge>
+                            </div>
+                        </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
+
                  <Separator />
 
-                 <div className="flex items-center justify-between pt-1">
+                 <div className="flex items-center justify-between pt-2">
                     <span className="text-xs text-muted-foreground">Was this helpful?</span>
                     <div className="flex gap-1">
-                      <Button variant="ghost" size="icon" className="h-7 w-7">
-                        <ThumbsUp className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="h-7 w-7">
-                        <ThumbsDown className="h-4 w-4" />
-                      </Button>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="h-7 w-7">
+                                        <ThumbsUp className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Helpful</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="h-7 w-7">
+                                        <ThumbsDown className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Not Helpful</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
                     </div>
                   </div>
                  

@@ -11,6 +11,7 @@ import {
   MoreHorizontal,
   Settings,
   AlertTriangle,
+  Trash2,
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
@@ -27,6 +28,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images'
 import { Icons } from '@/components/icons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
+import { ResetDataDialog } from '@/components/reset-data-dialog'
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -107,6 +109,16 @@ export default function DashboardLayout({
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Settings</span>
                   </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <ResetDataDialog>
+                     <DropdownMenuItem
+                      onSelect={(e) => e.preventDefault()}
+                      className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      <span>Reset Pilot Data</span>
+                    </DropdownMenuItem>
+                  </ResetDataDialog>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link href="/">

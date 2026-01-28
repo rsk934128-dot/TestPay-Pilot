@@ -3,8 +3,8 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
-import { interpretApiResponseCode } from '@/ai/flows/interpret-api-response-codes'
-import { addTransaction } from '@/lib/data'
+import { interpretApiResponseCode, type InterpretApiResponseCodeOutput } from '@/ai/flows/interpret-api-response-codes'
+import { addTransaction, resetTransactions } from '@/lib/data'
 import type { CardType, Transaction } from '@/lib/definitions'
 
 // A mock function to simulate calling a payment gateway
@@ -117,12 +117,19 @@ export async function createTestPayment(prevState: State, formData: FormData) {
   }
 }
 
-export async function getInterpretation(responseCode: string, gatewayMessage: string) {
+export async function getInterpretation(responseCode: string, gatewayMessage: string): Promise<InterpretApiResponseCodeOutput | null> {
   try {
     const result = await interpretApiResponseCode({ responseCode, gatewayMessage });
-    return result.interpretation;
+    return result;
   } catch (error) {
     console.error('AI interpretation failed:', error);
-    return 'Could not get an interpretation at this time. The AI model may be offline.';
+    return null;
   }
+}
+
+export async function resetAllData() {
+  resetTransactions();
+  revalidatePath('/dashboard');
+  revalidatePath('/dashboard/history');
+  redirect('/dashboard');
 }

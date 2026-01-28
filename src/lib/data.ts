@@ -87,6 +87,10 @@ addTransaction.prototype.getLastTransaction = function() {
   return transactions[0];
 }
 
+export function resetTransactions() {
+  transactions = [...initialTransactions];
+}
+
 export function getTransactionStats() {
     const total = transactions.length;
     const success = transactions.filter(tx => tx.status === 'Success').length;
