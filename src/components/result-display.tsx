@@ -12,6 +12,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from './ui/skeleton'
 
 export function ResultDisplay({ transaction }: { transaction: Transaction }) {
   const [interpretation, setInterpretation] = useState<string | null>(null)
@@ -53,14 +54,29 @@ export function ResultDisplay({ transaction }: { transaction: Transaction }) {
                   Interpreting...
                 </>
               ) : (
-                'Interpret Response Code'
+                'Interpret Response'
               )}
             </Button>
-            {interpretation && (
-              <div className="mt-4 space-y-2 rounded-lg border bg-secondary/50 p-4">
-                <p className="font-semibold">Interpretation:</p>
-                <p className="whitespace-pre-wrap text-muted-foreground">{interpretation}</p>
-                 <p className="pt-2 text-xs text-muted-foreground/80">
+            {isLoading && (
+              <div className="mt-4 space-y-4 rounded-lg border bg-secondary/50 p-4">
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-3 w-full" />
+                </div>
+                 <div className="space-y-2">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-3 w-4/5" />
+                </div>
+                 <div className="space-y-2">
+                  <Skeleton className="h-4 w-28" />
+                  <Skeleton className="h-3 w-full" />
+                </div>
+              </div>
+            )}
+            {interpretation && !isLoading && (
+               <div className="mt-4 space-y-2 rounded-lg border bg-secondary/50 p-4">
+                <div className="whitespace-pre-wrap font-sans text-sm text-muted-foreground">{interpretation}</div>
+                 <p className="pt-4 text-xs text-muted-foreground/80">
                   * AI explanation is advisory, not official gateway documentation.
                 </p>
               </div>

@@ -28,41 +28,21 @@ import { Separator } from '@/components/ui/separator'
 import { ResultDisplay } from '@/components/result-display'
 
 export default function ResultPage({ params }: { params: { id: string } }) {
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState<Record<string, boolean>>({})
   const transaction = getTransactionById(params.id)
 
   if (!transaction) {
     notFound()
   }
 
-  const handleCopy = () => {
-    if (!transaction) return
-    navigator.clipboard.writeText(transaction.transactionId)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+  const handleCopy = (key: string, text: string) => {
+    if (!text) return
+    navigator.clipboard.writeText(text)
+    setCopied(prev => ({ ...prev, [key]: true }))
+    setTimeout(() => setCopied(prev => ({ ...prev, [key]: false })), 2000)
   }
 
   const isSuccess = transaction.status === 'Success'
-
-  const details = [
-    {
-      icon: Hash,
-      label: 'Transaction ID',
-      value: transaction.transactionId,
-      isMono: true,
-      copyable: true,
-    },
-    {
-      icon: Calendar,
-      label: 'Date & Time',
-      value: format(new Date(transaction.date), "dd MMM yyyy, HH:mm:ss"),
-    },
-    {
-      icon: CreditCard,
-      label: 'Card Used',
-      value: `${transaction.cardType} ending in ${transaction.cardNumber.slice(-4)}`,
-    },
-  ]
 
   return (
     <div className="mx-auto w-full max-w-2xl">
@@ -84,33 +64,51 @@ export default function ResultPage({ params }: { params: { id: string } }) {
           <div className="space-y-4 rounded-lg border bg-secondary/30 p-4">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Response Code</span>
-              <span className="font-mono text-sm font-semibold">{transaction.responseCode}</span>
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-sm font-semibold">{transaction.responseCode}</span>
+                 <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleCopy('code', transaction.responseCode)}>
+                    {copied['code'] ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+                </Button>
+              </div>
             </div>
             <Separator />
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Gateway Message</span>
-              <span className="text-right font-semibold">{transaction.gatewayMessage}</span>
+              <div className="flex items-center gap-2 text-right">
+                <span className="text-right font-semibold">{transaction.gatewayMessage}</span>
+                 <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleCopy('msg', transaction.gatewayMessage)}>
+                    {copied['msg'] ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+                </Button>
+              </div>
             </div>
           </div>
           
           <div className="space-y-4">
             <h3 className="font-semibold">Transaction Details</h3>
             <ul className="space-y-3 text-sm">
-              {details.map(({ icon: Icon, label, value, isMono, copyable }) => (
-                <li key={label} className="flex items-center justify-between">
+               <li className="flex items-center justify-between">
                   <span className="flex items-center gap-2 text-muted-foreground">
-                    <Icon className="h-4 w-4" /> {label}
+                    <Hash className="h-4 w-4" /> Transaction ID
                   </span>
                   <div className="flex items-center gap-1">
-                    <span className={isMono ? 'font-mono text-xs' : ''}>{value}</span>
-                    {copyable && (
-                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleCopy}>
-                          {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+                    <span className={'font-mono text-xs'}>{transaction.transactionId}</span>
+                      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleCopy('txid', transaction.transactionId)}>
+                          {copied['txid'] ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
                       </Button>
-                    )}
                   </div>
                 </li>
-              ))}
+                <li className="flex items-center justify-between">
+                  <span className="flex items-center gap-2 text-muted-foreground">
+                    <Calendar className="h-4 w-4" /> Date & Time
+                  </span>
+                   <span>{format(new Date(transaction.date), "dd MMM yyyy, HH:mm:ss")}</span>
+                </li>
+                 <li className="flex items-center justify-between">
+                  <span className="flex items-center gap-2 text-muted-foreground">
+                    <CreditCard className="h-4 w-4" /> Card Used
+                  </span>
+                  <span>{`${transaction.cardType} ending in ${transaction.cardNumber.slice(-4)}`}</span>
+                </li>
             </ul>
           </div>
           

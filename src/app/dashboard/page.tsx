@@ -31,11 +31,31 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Icons } from '@/components/icons'
+import { TransactionChart } from '@/components/transaction-chart'
 
 export default function DashboardPage() {
   const router = useRouter()
   const stats = getTransactionStats()
   const recentTransactions = getTransactions().slice(0, 5)
+
+  if (stats.total === 0) {
+      return (
+        <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm" >
+          <div className="flex flex-col items-center gap-1 text-center">
+            <h3 className="text-2xl font-bold tracking-tight font-headline">
+              No transactions yet
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Make your first test payment to see your dashboard.
+            </p>
+            <Button className="mt-4 bg-accent text-accent-foreground hover:bg-accent/90" asChild>
+              <Link href="/dashboard/payment">New Payment</Link>
+            </Button>
+          </div>
+        </div>
+      )
+  }
+
 
   return (
     <>
@@ -59,9 +79,9 @@ export default function DashboardPage() {
             </p>
           </CardContent>
         </Card>
-        <Card className="border-green-500 bg-green-50/50 dark:bg-green-500/10">
+        <Card className="border-green-600 bg-green-100 text-green-900 dark:border-green-500 dark:bg-green-950 dark:text-green-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium text-green-800 dark:text-green-200">
               Successful Payments
             </CardTitle>
             <CheckCircle2 className="h-4 w-4 text-green-600" />
@@ -73,9 +93,9 @@ export default function DashboardPage() {
             </p>
           </CardContent>
         </Card>
-        <Card className="border-red-500 bg-red-50/50 dark:bg-red-500/10">
+        <Card className="border-red-600 bg-red-100 text-red-900 dark:border-red-500 dark:bg-red-950 dark:text-red-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Failed Payments</CardTitle>
+            <CardTitle className="text-sm font-medium text-red-800 dark:text-red-200">Failed Payments</CardTitle>
             <XCircle className="h-4 w-4 text-red-600" />
           </CardHeader>
           <CardContent>
@@ -86,8 +106,8 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
-      <div>
-        <Card>
+      <div className="grid grid-cols-1 gap-4 md:gap-8 lg:grid-cols-7">
+        <Card className="lg:col-span-4">
           <CardHeader className="flex flex-row items-center">
             <div className="grid gap-2">
               <CardTitle>Recent Transactions</CardTitle>
@@ -131,7 +151,7 @@ export default function DashboardPage() {
                         </div>
                       </TableCell>
                       <TableCell className="text-center">
-                        <Badge variant={tx.status === 'Success' ? 'default' : 'destructive'} className={tx.status === 'Success' ? `bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300` : 'dark:bg-red-900/50 dark:text-red-300'}>
+                        <Badge variant={tx.status === 'Success' ? 'default' : 'destructive'} className={tx.status === 'Success' ? `bg-green-100 text-green-800 dark:bg-green-800/20 dark:text-green-300` : `bg-red-100 text-red-800 dark:bg-red-800/20 dark:text-red-300`}>
                           {tx.status}
                         </Badge>
                       </TableCell>
@@ -144,6 +164,9 @@ export default function DashboardPage() {
             </Table>
           </CardContent>
         </Card>
+         <div className="lg:col-span-3">
+          <TransactionChart stats={stats} />
+        </div>
       </div>
     </>
   )

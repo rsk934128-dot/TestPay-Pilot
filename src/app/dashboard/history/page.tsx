@@ -1,12 +1,14 @@
 'use client'
 
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { CreditCard } from 'lucide-react'
+import { CreditCard, History } from 'lucide-react'
 import { format } from 'date-fns'
 
 import { getTransactions } from '@/lib/data'
 import { formatCurrency, getCardType } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -27,6 +29,25 @@ import { Icons } from '@/components/icons'
 export default function HistoryPage() {
   const router = useRouter()
   const transactions = getTransactions()
+
+  if (transactions.length === 0) {
+      return (
+        <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
+          <div className="flex flex-col items-center gap-1 text-center">
+            <History className="h-12 w-12 text-muted-foreground" />
+            <h3 className="mt-4 text-2xl font-bold tracking-tight font-headline">
+              No Transaction History
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              You haven't made any test payments yet.
+            </p>
+            <Button className="mt-4 bg-accent text-accent-foreground hover:bg-accent/90" asChild>
+              <Link href="/dashboard/payment">Make a Payment</Link>
+            </Button>
+          </div>
+        </div>
+      )
+  }
 
   return (
     <>
@@ -69,7 +90,7 @@ export default function HistoryPage() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={tx.status === 'Success' ? 'default' : 'destructive'} className={tx.status === 'Success' ? `bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300` : 'dark:bg-red-900/50 dark:text-red-300'}>
+                        <Badge variant={tx.status === 'Success' ? 'default' : 'destructive'} className={tx.status === 'Success' ? `bg-green-100 text-green-800 dark:bg-green-800/20 dark:text-green-300` : `bg-red-100 text-red-800 dark:bg-red-800/20 dark:text-red-300`}>
                           {tx.status}
                         </Badge>
                       </TableCell>

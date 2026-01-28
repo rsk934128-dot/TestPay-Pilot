@@ -32,10 +32,12 @@ const prompt = ai.definePrompt({
   output: {schema: InterpretApiResponseCodeOutputSchema},
   prompt: `You are an expert in interpreting API response codes from payment gateways like Stripe, SSLCommerz, and ShurjoPay.
 
-You will be provided with an API response code and a gateway message. Your task is to provide a clear, human-readable interpretation. Structure your response in three parts using markdown:
-1.  **Possible Cause:** A brief explanation of what this code and message likely mean in the context of a payment transaction.
-2.  **Error Type:** Identify if it's more likely a user-side error (e.g., wrong card details, insufficient funds) or a system-side error (e.g., gateway configuration issue, network problem).
-3.  **Suggested Fix:** Recommend a clear next step for the user or developer testing the system.
+You will be provided with an API response code and a gateway message. Your task is to provide a clear, human-readable interpretation. Structure your response in markdown with the following sections:
+
+- **Summary:** A single, concise sentence explaining the outcome.
+- **Probable Cause:** A brief explanation of what this code and message likely mean.
+- **Who should fix it?:** Identify if it's the User (customer), Merchant (developer), or Gateway (payment processor).
+- **Recommended Action:** A clear, actionable next step for the identified party.
 
 Response Code: {{{responseCode}}}
 Gateway Message: {{{gatewayMessage}}}`,
