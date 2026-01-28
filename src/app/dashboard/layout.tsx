@@ -17,6 +17,7 @@ import {
   Mic,
   Projector,
   Loader2,
+  Menu,
 } from 'lucide-react'
 import { useEffect } from 'react'
 
@@ -36,6 +37,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { ResetDataDialog } from '@/components/reset-data-dialog'
 import { useUser, signOutNonBlocking, useAuth } from '@/firebase'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 
 
 const navItems = [
@@ -173,6 +175,102 @@ export default function DashboardLayout({
         </div>
       </div>
       <div className="flex flex-col">
+         <header className="flex h-14 items-center gap-4 border-b bg-card px-4 md:hidden">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button size="icon" variant="outline">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle navigation menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="flex flex-col">
+              <nav className="grid gap-2 text-lg font-medium">
+                <Link
+                  href="/dashboard"
+                  className="flex items-center gap-2 mb-4 text-lg font-semibold font-headline"
+                >
+                  <Icons.logo />
+                  <span>TestPay</span>
+                   <Badge
+                      variant="outline"
+                      className="ml-auto border-orange-500 text-orange-500"
+                    >
+                      STAGING
+                    </Badge>
+                </Link>
+                {navItems.map(({ href, icon: Icon, label }) => {
+                   const isActive = pathname === href;
+                   return (
+                    <Link
+                      key={href}
+                      href={href}
+                      className={cn("flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground transition-all hover:text-foreground", isActive && "bg-muted text-foreground")}
+                    >
+                      <Icon className="h-5 w-5" />
+                      {label}
+                    </Link>
+                )})}
+              </nav>
+              <div className="mt-auto">
+                 <div className="flex items-center gap-4">
+                    {userAvatar && (
+                      <Image
+                        src={userAvatar.imageUrl}
+                        width={40}
+                        height={40}
+                        alt={userAvatar.description}
+                        data-ai-hint={userAvatar.imageHint}
+                        className="rounded-full"
+                      />
+                    )}
+                    <div className="flex-1 overflow-hidden">
+                      <p className="font-semibold truncate">
+                        {user.phoneNumber}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        Authenticated User
+                      </p>
+                    </div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                            <Settings className="mr-2 h-4 w-4" />
+                            <span>Settings</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <ResetDataDialog>
+                            <DropdownMenuItem
+                            onSelect={e => e.preventDefault()}
+                            className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+                            >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            <span>Reset Pilot Data</span>
+                            </DropdownMenuItem>
+                        </ResetDataDialog>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleLogout}>
+                            <LogOut className="mr-2 h-4 w-4" />
+                            <span>Log out</span>
+                        </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
+          <div className='flex-1'>
+            <h1 className='font-headline font-semibold text-lg'>
+                 {navItems.find(item => item.href === pathname)?.label || 'Dashboard'}
+            </h1>
+          </div>
+        </header>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           <Alert className="border-yellow-200 bg-yellow-50/50 text-yellow-900 [&>svg]:text-yellow-500">
             <AlertTriangle className="h-4 w-4" />
